@@ -1,5 +1,4 @@
 var clock, scene, camera, renderer, controls, stats, particles;
-var mouse = {x:0, y:0};
 var cameraTranslate = {x:0, y:0, z:0};
 var cameraRotate = {x:0, y:0, z:0}
 
@@ -127,20 +126,6 @@ function toggleVisible(object) {
 	}
 }
 
-
-
-function onResize() {
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
-	renderer.setSize(window.innerWidth, window.innerHeight);
-}
-window.addEventListener('resize', onResize, false);
-function onMouseMove( event ) {
-	mouse.x = event.clientX - window.innerWidth / 2;
-	mouse.y = event.clientY - window.innerHeight / 2;
-}
-window.addEventListener('mousemove', onMouseMove, false);
-
 function onKeydown( event ) {
 	if(event.keyCode == 38) { // up
 		cameraTranslate.y = 1;
@@ -170,19 +155,5 @@ function onKeyup( event ) {
 	cameraRotate.x = 0; cameraRotate.y = 0;
 }
 window.addEventListener('keyup',onKeyup,false);
-
-
-function initStats() {
-	var statcontroller = new Stats();
-	statcontroller.setMode(0);
-
-	statcontroller.domElement.style.position="absolute";
-	statcontroller.domElement.style.left="0";
-	statcontroller.domElement.style.top="0";
-
-	document.getElementById("Stats-output").appendChild(statcontroller.domElement);
-
-	return statcontroller;
-}
 
 init();

@@ -1,5 +1,4 @@
 var clock, scene, camera, renderer, controls, stats, particles;
-var mouse = {x:0, y:0};
 var cameraTranslate = {x:0, y:0, z:0};
 var cameraRotate = {x:0, y:0, z:0};
 
@@ -8,7 +7,7 @@ var frames = [];
 
 
 const cameraStates = {
-	third: {x:1500, y:1000, z:800},
+	third: {x:150, y:100, z:80},
 	first: {x:0, y:0, z:1},
 }
 
@@ -30,7 +29,7 @@ function init() {
 	
 
 	// debugging purposes - set up bounding cube
-	var cubeGeometry = new THREE.BoxGeometry(1000, 1000, 1000);
+	var cubeGeometry = new THREE.BoxGeometry(100, 100, 100);
 	var cubeWireframe = new THREE.WireframeGeometry(cubeGeometry);
 	var cubeLines = new THREE.LineSegments(cubeWireframe);
 	scene.add(cubeLines);
@@ -87,33 +86,6 @@ function toggleVisible(object) {
 		frames[0].visible = !frames[0].visible;
 		frames[1].visible = !frames[1].visible;
 	}
-}
-
-
-function onResize() {
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
-	renderer.setSize(window.innerWidth, window.innerHeight);
-}
-window.addEventListener('resize', onResize, false);
-function onMouseMove( event ) {
-	mouse.x = event.clientX - window.innerWidth / 2;
-	mouse.y = event.clientY - window.innerHeight / 2;
-}
-window.addEventListener('mousemove', onMouseMove, false);
-
-
-function initStats() {
-	var statcontroller = new Stats();
-	statcontroller.setMode(0);
-
-	statcontroller.domElement.style.position="absolute";
-	statcontroller.domElement.style.left="0";
-	statcontroller.domElement.style.top="0";
-
-	document.getElementById("Stats-output").appendChild(statcontroller.domElement);
-
-	return statcontroller;
 }
 
 init();
