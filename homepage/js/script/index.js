@@ -2,11 +2,16 @@ var clock, scene, camera, renderer, controls, stats, particles;
 var cameraTranslate = {x:0, y:0, z:0};
 var cameraRotate = {x:0, y:0, z:0}
 
-var particles = [];
 var entities = [];
 var frames = [];
 
-// delcare disk stuff
+// declare a new sprite
+var terrain = {
+	particles: [],
+	colorMap: new ColorMap(
+		{h: 0.83, s:1, l:9},
+		{h: 0.5, s:1, l:9}),
+};
 var particleSprite = new THREE.TextureLoader().load('./images/disk.png');
 
 
@@ -50,35 +55,58 @@ function init() {
 
 	//set up lights
 
-	var ambientLight = new THREE.AmbientLight( 0x8888ff );
+	var ambientLight = new THREE.AmbientLight( 0x222266 );
 	scene.add( ambientLight );
 
-	var lights = [];
-	lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 );
-	lights[ 1 ] = new THREE.PointLight( 0xffffff, 1, 0 );
-	lights[ 2 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+	//
+	let terrainGeometry = new THREE.Geometry();
+	var terrainMaterial = new THREE.PointsMaterial({
+		size: 10,
+		sizeAttenuation: true,
+		map: particleSprite,
+		alphaTest: 0.5,
+		transparent: true,
+		vertexColors: THREE.VertexColors
+	});
 
-	lights[ 0 ].position.set( 0, 200, 0 );
-	lights[ 1 ].position.set( 100, 200, 100 );
-	lights[ 2 ].position.set( - 100, - 200, - 100 );
-
-	scene.add( lights[ 0 ] );
-	scene.add( lights[ 1 ] );
-	scene.add( lights[ 2 ] );
-
-	// create fabrics
-	for(let i=0; i<40; i++) {
-		let myfabric = new Fabric({
-			x:-500+Math.random()*1000, 
-			y:-500+Math.random()*1000, 
-			z:-500+Math.random()*1000}, 10, 10);
-		myfabric.init();
-		entities.push(myfabric);
+	const tx = 100;
+	const tz = 100;
+	const tspace = 10;
+	const twidth = tx * tspace;
+	const tdepth = tz * tspace;
+	const tleft = -twidth/2;
+	const ttop = -tdepth/2;
+	for(let i=0; i<tx; i++) {
+		for(let j=0; j<tz; j++) {
+			var vertex = new THREE.Vector3();	
+			vertex.x = tleft + tspace * i;
+			vertex.z = ttop + tspace * j;
+			vertex.y = noise.simplex3(vertex.x/300, vertex.z/300, 1)*70;
+			terrainGeometry.vertices.push( vertex );
+			let mycolor = new THREE.Color();
+			// TODO add color
+			terrainGeometry.colors.push(mycolor);
+		}
 	}
+
+	let terrainObj = new THREE.Points(terrainGeometry, terrainMaterial);
+	scene.add(terrainObj);
+
+
+	// // create fabrics
+	// for(let i=0; i<40; i++) {
+	// 	let myfabric = new Fabric({
+	// 		x:-500+Math.random()*1000, 
+	// 		y:-500+Math.random()*1000, 
+	// 		z:-500+Math.random()*1000}, 10, 10);
+	// 	myfabric.init();
+	// 	entities.push(myfabric);
+	// }
+
 
 	//render
 	renderer = new THREE.WebGLRenderer();
-	renderer.setClearColor (0x333333, 1);
+	renderer.setClearColor (0x080811, 1);
 
 	//finish
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
