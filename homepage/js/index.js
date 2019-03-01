@@ -94,7 +94,7 @@ function Fabric(origin, dimx, dimy) {
 		this.alive = false;
 	}
 }
-var rotationRadius = 3000;
+
 
 function init() {
 	stats = initStats();
