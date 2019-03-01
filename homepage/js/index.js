@@ -30,7 +30,7 @@ function Fabric(origin, dimx, dimy) {
 		this.particles.push(row);
 	}
 
-	this.init = function(){
+	this.init = function() {
 		// make particles
 		// let fabricGeometry = new THREE.Geometry();
 		let fabricGeometry = new THREE.BufferGeometry();
@@ -65,14 +65,18 @@ function Fabric(origin, dimx, dimy) {
 		scene.add(fabricObj);
 	}	
 	this.loop = function(){
+		this.origin.z+=10;
+		this.fabricObj.position.x = this.origin.x;
+		// this.fabricObj.position.y = this.origin.y;
+		this.fabricObj.position.z = this.origin.z;
 
+		if(this.origin.z>510) { this.origin.z = -500; }
+		if(this.origin.z<-510) { this.origin.z = 500; }
 	}
 	this.kill = function(){
 
 	}
 }
-
-var myfabric;
 var rotationRadius = 3000;
 
 function init() {
@@ -101,6 +105,8 @@ function init() {
 	var line = new THREE.LineSegments(wireframe);
 	scene.add(line);
 
+	//set up lights
+
 	var ambientLight = new THREE.AmbientLight( 0x000000 );
 	scene.add( ambientLight );
 
@@ -118,28 +124,14 @@ function init() {
 	scene.add( lights[ 2 ] );
 
 
-	// var geometry = new THREE.Geometry();
-	// sprite = new THREE.TextureLoader().load('./images/disk.png');
-	// //make particles
-	// for(var zval=-1000; zval<1000; zval++) {
-	// 	var vertex = new THREE.Vector3();
-	// 	vertex.x = 2000 * Math.random() - 1000;
-	// 	vertex.y = 2000 * Math.random() - 1000;
-	// 	vertex.z = zval;
-
-	// 	geometry.vertices.push( vertex );
-	// 	geometry.colors.push(new THREE.Color(0xffffff));
-	// }
-
-	// material = new THREE.PointsMaterial({size: 20, sizeAttenuation: true, map: sprite, alphaTest: 0.5, transparent: true, vertexColors: THREE.VertexColors} );
-
-	// particles = new THREE.Points(geometry, material);
-	// scene.add(particles);
-
-
-	
-	myfabric = new Fabric({x:0, y:0, z:0}, 10, 10);
-	myfabric.init();
+	for(let i=0; i<20; i++) {
+		let myfabric = new Fabric({
+			x:-500+Math.random()*1000, 
+			y:-500+Math.random()*1000, 
+			z:-500+Math.random()*1000}, 10, 10);
+		myfabric.init();
+		entities.push(myfabric);
+	}
 
 	//render
 	renderer = new THREE.WebGLRenderer();
@@ -148,13 +140,13 @@ function init() {
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
 	onResize();
 	renderScene();
+
+	var orbit = new THREE.OrbitControls( camera, renderer.domElement );
+	orbit.enableZoom = false;
 }
 
 function renderScene() {
 	// updateParticles();
-	for(let i=0; i<entities.length; i++) {
-		entities[i].loop();
-	}
 
 	camera.position.y += cameraTranslate.y * 20;
 	camera.position.x += cameraTranslate.x * 20;
@@ -163,29 +155,33 @@ function renderScene() {
 	camera.rotation.x += cameraRotate.y * 0.01;
 	camera.rotation.y += cameraRotate.x * 0.01;
 
+	for(let i=0; i<entities.length; i++) {
+		entities[i].loop();
+	}
+
 	stats.update();
 	requestAnimationFrame(renderScene);
 	renderer.render(scene, camera);
 }
 
-function updateParticles() {
-	var time = clock.getElapsedTime();
+// function updateParticles() {
+// 	var time = clock.getElapsedTime();
 
-	// camera.position.x += (  mouse.x - camera.position.x*0.6) * 0.1;
-	// camera.position.y += (- mouse.y - camera.position.y*0.6) * 0.1;
+// 	// camera.position.x += (  mouse.x - camera.position.x*0.6) * 0.1;
+// 	// camera.position.y += (- mouse.y - camera.position.y*0.6) * 0.1;
 
-	camera.lookAt(scene.position);
+// 	camera.lookAt(scene.position);
 
-	for(var i=0; i<particles.geometry.vertices.length; i++) {
-		particles.geometry.vertices[i].z+=30;
-		if(particles.geometry.vertices[i].z>1000) {
-			particles.geometry.vertices[i].z=-1000;
-		}
-	}
-	particles.geometry.verticesNeedUpdate=true;
-	// h = time * 0.1 % 360;
-	// material.color.setHSL(h, 0.5, 0.5);
-}
+// 	for(var i=0; i<particles.geometry.vertices.length; i++) {
+// 		particles.geometry.vertices[i].z+=30;
+// 		if(particles.geometry.vertices[i].z>1000) {
+// 			particles.geometry.vertices[i].z=-1000;
+// 		}
+// 	}
+// 	particles.geometry.verticesNeedUpdate=true;
+// 	// h = time * 0.1 % 360;
+// 	// material.color.setHSL(h, 0.5, 0.5);
+// }
 
 
 
