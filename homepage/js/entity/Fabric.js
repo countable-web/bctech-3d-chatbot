@@ -59,7 +59,7 @@ function Fabric(origin, dimx, dimy) {
 		scene.add(fabricObj);
 	}	
 	this.loop = function(){
-		this.origin.z+=3;
+		this.origin.z;
 
 		this.fabricObj.position.x = this.origin.x;
 		this.fabricObj.position.y = this.origin.y;
