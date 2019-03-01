@@ -40,20 +40,23 @@ function ColorMap(startColor, endColor) {
 		s: endColor.s-startColor.s, 
 		l: endColor.l-startColor.l
 	};
-	this.progess = 0;
-	this.nudge = function(amount) {
-		this.progress += amount ? amount : 0.01;
-		if(progress>1) this.progress-=1;
-	}
 	this.getColor = function(percent) {
-		var myprogress = this.progress;
-		if(percent) { myprogress = percent; } 
-		if(myprogress<0) { myprogress+=1; } 
-		else if (myprogress>1) { myprogress-=1; }
-		return {
-			h: this.startColor.h + myprogress * this.delColor.h,
-			s: this.startColor.s + myprogress * this.delColor.s,
-			l: this.startColor.l + myprogress * this.delColor.l,
-		};
+		var progress = ((percent % 2)+2)%2; // get positive mod
+		if(progress<=1) { 
+			return {
+				h: this.startColor.h + progress * this.delColor.h,
+				s: this.startColor.s + progress * this.delColor.s,
+				l: this.startColor.l + progress * this.delColor.l,
+			};
+		} else {
+			progress -= 1;
+			return {
+				h: this.endColor.h - progress * this.delColor.h,
+				s: this.endColor.s - progress * this.delColor.s,
+				l: this.endColor.l - progress * this.delColor.l,
+			};
+
+		}
+		
 	}
 }
