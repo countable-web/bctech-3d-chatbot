@@ -29,27 +29,34 @@ function init() {
 	
 
 	// debugging purposes - set up bounding cube
-	var cubeGeometry = new THREE.BoxGeometry(100, 100, 100);
-	var cubeWireframe = new THREE.WireframeGeometry(cubeGeometry);
-	var cubeLines = new THREE.LineSegments(cubeWireframe);
-	scene.add(cubeLines);
-	frames.push(cubeLines);
+	var boxGeometry = new THREE.BoxGeometry(100, 100, 100);
+	var boxWireframe = new THREE.WireframeGeometry(boxGeometry);
+	var boxLines = new THREE.LineSegments(boxWireframe);
+	scene.add(boxLines);
+	frames.push(boxLines);
 
 	// debugging purposes - set up ball (represents user)
-	var ballGeometry = new THREE.SphereGeometry(10, 4, 4);
-	var ballWireFrame = new THREE.WireframeGeometry(ballGeometry);
-	var ballLines = new THREE.LineSegments(ballWireFrame);
-	scene.add(ballLines);
-	frames.push(ballLines);
+	var playerGeometry = new THREE.BoxGeometry(8, 8, 8);
+	var playerWireFrame = new THREE.WireframeGeometry(playerGeometry);
+	var playerLines = new THREE.LineSegments(playerWireFrame);
+	scene.add(playerLines);
+	frames.push(playerLines);
 
 	//set up lights
-
 	var ambientLight = new THREE.AmbientLight( 0x8888ff );
 	scene.add( ambientLight );
 
 	//render
 	renderer = new THREE.WebGLRenderer();
 	renderer.setClearColor (0x333333, 1);
+
+
+	// create fabrics
+	for(let i=0; i<1; i++) {
+		let myfabric = new Fabric({x:0, y:0, z:0}, 10, 10);
+		myfabric.init();
+		entities.push(myfabric);
+	}
 
 	//finish
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
