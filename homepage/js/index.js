@@ -1,7 +1,7 @@
 var clock, scene, camera, renderer, controls, stats, particles;
 var mouse = {x:0, y:0};
 var cameraTranslate = {x:0, y:0, z:0};
-var cameraRotate = {x:0, y:0, z:0}
+var cameraRotate = {x:0, y:0, z:0};
 
 var entities = [];
 var frames = [];
