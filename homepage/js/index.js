@@ -141,7 +141,7 @@ function init() {
 	scene.add( lights[ 2 ] );
 
 	// create fabrics
-	for(let i=0; i<1; i++) {
+	for(let i=0; i<20; i++) {
 		let myfabric = new Fabric({
 			x:-500+Math.random()*1000, 
 			y:-500+Math.random()*1000, 
