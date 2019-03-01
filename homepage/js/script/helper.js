@@ -43,11 +43,13 @@ function ColorMap(startColor, endColor) {
 	this.progess = 0;
 	this.nudge = function(amount) {
 		this.progress += amount ? amount : 0.01;
-		if(progress>1) progress = 0;
+		if(progress>1) this.progress-=1;
 	}
 	this.getColor = function(percent) {
+		var myprogress = this.progress;
 		if(percent) { myprogress = percent; } 
-		else { myprogress = progress; }
+		if(myprogress<0) { myprogress+=1; } 
+		else if (myprogress>1) { myprogress-=1; }
 		return {
 			h: this.startColor.h + myprogress * this.delColor.h,
 			s: this.startColor.s + myprogress * this.delColor.s,
