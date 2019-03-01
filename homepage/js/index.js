@@ -32,8 +32,8 @@ function Fabric(origin, dimx, dimy) {
 
 	this.init = function() {
 		// make particles
-		// let fabricGeometry = new THREE.Geometry();
-		let fabricGeometry = new THREE.BufferGeometry();
+		let fabricGeometry = new THREE.Geometry();
+		// let fabricGeometry = new THREE.BufferGeometry();
 		var particleMaterial = new THREE.PointsMaterial({
 			size: 10,
 			sizeAttenuation: false,
@@ -43,7 +43,9 @@ function Fabric(origin, dimx, dimy) {
 			// vertexColors: THREE.VertexColors
 		});
 		let myhue = Math.random();
-		particleMaterial.color.setHSL(myhue, 0.3, 0.7);
+		// particleMaterial.color.setHSL(myhue, 0.3, 0.7);
+		let mycolor = new THREE.Color(0xffffff);
+		mycolor.setHSL(myhue, 0.3, 0.7);
 
 		let vertices = [];
 		for(let i=0; i<this.particles.length; i++) {
@@ -52,23 +54,37 @@ function Fabric(origin, dimx, dimy) {
 				vertex.x = this.origin.x + this.particles[i][j].x;
 				vertex.y = this.origin.y + this.particles[i][j].y;
 				vertex.z = this.origin.z + this.particles[i][j].z;
-				// fabricGeometry.vertices.push( vertex );
-				vertices.push(vertex.x, vertex.y, vertex.z);
+				fabricGeometry.vertices.push( vertex );
+				fabricGeometry.colors.push(mycolor);
+				// vertices.push(vertex.x, vertex.y, vertex.z);
 			}
 		}
-		// fabricGeometry.colors.push(new THREE.Color(0xffffff));
 
-		fabricGeometry.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+		// fabricGeometry.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+		// fabricGeometry.__dirtyVertices = true;
+		// fabricGeometry.dynamic = true;
 
 		let fabricObj = new THREE.Points(fabricGeometry, particleMaterial);
 		this.fabricObj = fabricObj;
 		scene.add(fabricObj);
 	}	
 	this.loop = function(){
-		this.origin.z+=10;
+		// this.origin.z+=10;
+		/* TODO MAJOR POSITIONING BUG??? 
+		* things get placed out of bounds all the time, 
+		* only when these lines below are uncommented
+		*/
 		this.fabricObj.position.x = this.origin.x;
-		// this.fabricObj.position.y = this.origin.y;
+		this.fabricObj.position.y = this.origin.y;
 		this.fabricObj.position.z = this.origin.z;
+
+		let oldvertices = this.fabricObj.geometry.vertices;
+
+		for(let i=0; i<oldvertices.length; i++) {
+			oldvertices[i].z+=1*Math.sin(clock.getElapsedTime()*4)+
+									1*Math.sin(0.5*oldvertices[i].y+clock.getElapsedTime()*4);
+		}
+		this.fabricObj.geometry.verticesNeedUpdate=true;
 
 		if(this.origin.z>510) { this.origin.z = -500; }
 		if(this.origin.z<-510) { this.origin.z = 500; }
@@ -107,7 +123,7 @@ function init() {
 
 	//set up lights
 
-	var ambientLight = new THREE.AmbientLight( 0x000000 );
+	var ambientLight = new THREE.AmbientLight( 0x8888ff );
 	scene.add( ambientLight );
 
 	var lights = [];
@@ -135,6 +151,7 @@ function init() {
 
 	//render
 	renderer = new THREE.WebGLRenderer();
+	renderer.setClearColor (0x888888, 1);
 
 	//finish
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
