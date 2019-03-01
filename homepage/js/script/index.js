@@ -9,8 +9,8 @@ var frames = [];
 var terrain = {
 	particles: [],
 	colorMap: new ColorMap(
-		{h: 0.83, s:1, l:9},
-		{h: 0.5, s:1, l:9}),
+		{h: 0.83, s:1.0, l:0.9},
+		{h: 0.5, s:1.0, l:0.9}),
 };
 var particleSprite = new THREE.TextureLoader().load('./images/disk.png');
 
@@ -61,7 +61,7 @@ function init() {
 	//
 	let terrainGeometry = new THREE.Geometry();
 	var terrainMaterial = new THREE.PointsMaterial({
-		size: 10,
+		size: 15,
 		sizeAttenuation: true,
 		map: particleSprite,
 		alphaTest: 0.5,
@@ -84,7 +84,8 @@ function init() {
 			vertex.y = noise.simplex3(vertex.x/300, vertex.z/300, 1)*70;
 			terrainGeometry.vertices.push( vertex );
 			let mycolor = new THREE.Color();
-			// TODO add color
+			myHSL = terrain.colorMap.getColor(vertex.y/70);
+			mycolor.setHSL(myHSL.h, myHSL.s, myHSL.l);
 			terrainGeometry.colors.push(mycolor);
 		}
 	}
