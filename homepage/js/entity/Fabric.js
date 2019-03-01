@@ -1,3 +1,5 @@
+var particleSprite = new THREE.TextureLoader().load('./images/disk.png');
+
 function Fabric(origin, dimx, dimy) {
 	this.origin = {x: 0, y:0, z:0};
 	this.origin.x = origin.x; 
