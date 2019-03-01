@@ -5,6 +5,7 @@ var cameraRotate = {x:0, y:0, z:0}
 
 var particles = [];
 var entities = [];
+var frames = [];
 
 // delcare disk stuff
 var particleSprite = new THREE.TextureLoader().load('./images/disk.png');
@@ -34,11 +35,19 @@ function init() {
 	scene.add(camera);
 	
 
-	// debugging purposes - set up cube
+	// debugging purposes - set up bounding cube
 	var cubeGeometry = new THREE.BoxGeometry(1000, 1000, 1000);
-	var wireframe = new THREE.WireframeGeometry(cubeGeometry);
-	var line = new THREE.LineSegments(wireframe);
-	scene.add(line);
+	var cubeWireframe = new THREE.WireframeGeometry(cubeGeometry);
+	var cubeLines = new THREE.LineSegments(cubeWireframe);
+	scene.add(cubeLines);
+	frames.push(cubeLines);
+
+	// debugging purposes - set up ball (represents user)
+	var ballGeometry = new THREE.SphereGeometry(10, 4, 4);
+	var ballWireFrame = new THREE.WireframeGeometry(ballGeometry);
+	var ballLines = new THREE.LineSegments(ballWireFrame);
+	scene.add(ballLines);
+	frames.push(ballLines);
 
 	//set up lights
 
@@ -110,6 +119,12 @@ function changeCamera(perspective) {
 	camera.position.y = cameraState.y;
 	camera.position.z = cameraState.z;
 	camera.lookAt(0, 0, 0);
+}
+function toggleVisible(object) {
+	if(object == 'lines') {
+		frames[0].visible = !frames[0].visible;
+		frames[1].visible = !frames[1].visible;
+	}
 }
 
 
