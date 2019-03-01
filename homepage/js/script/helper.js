@@ -45,11 +45,13 @@ function ColorMap(startColor, endColor) {
 		this.progress += amount ? amount : 0.01;
 		if(progress>1) progress = 0;
 	}
-	this.getColor = function() {
+	this.getColor = function(percent) {
+		if(percent) { myprogress = percent; } 
+		else { myprogress = progress; }
 		return {
-			h: startColor.h + progress * delColor.h,
-			s: startColor.s + progress * delColor.s,
-			l: startColor.l + progress * delColor.l,
+			h: this.startColor.h + myprogress * this.delColor.h,
+			s: this.startColor.s + myprogress * this.delColor.s,
+			l: this.startColor.l + myprogress * this.delColor.l,
 		};
 	}
 }
