@@ -2,6 +2,8 @@ body {
 	margin: 0;
 	padding: 0;
 	overflow:hidden;
+	position:relative;
+	z-index:0;
 	background-color:#000000;
 }
 div#WebGL-output {
@@ -14,4 +16,10 @@ div#WebGL-output {
 * {
 	margin:0;
 	padding:0;
+}
+#interface {
+	position:absolute;
+	right:0;
+	top:0;
+	z-index:5;
 }
