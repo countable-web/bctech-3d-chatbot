@@ -13,20 +13,41 @@ entity: {
 This allows us to manage memory by modeling the whole thing as essentially an expanded starfield. So instead of moving the user through a giant box, we make things travel towards the user. When the entity enters the loading zone, we run `init()`. Then `loop()` every frame. After it exits the loading zone, we `kill()`.
 
 
-# Entity abstraction
+## Entity abstraction
 
 ```
 class Entity {
-    init() {
+    var state; // alive, dormant, or dead
+    init() { }
+    loop() { }
+    kill() { }
+    constructor() { }
+}
+```
 
-    }
-    loop() {
-
-    }
-    kill() {
-
-    }
-    constructor() {
+## Entity lifecycle
+```
+/* inside the script file */
+init() {
+    // 
+    entities.push(new Entity());
+}
+loop() {
+    for(entity in entities) {
+        if(/* entity alive */) {
+            if(/* entity just left bounding box */) {
+                entity.kill();
+            } else {
+                entity.loop();
+            }
+        } else if { /* entity dormant */
+            if(/* entity about to enter bounding box */) {
+                entity.init();
+            }
+        } else { /* therefore entity killed already */
+            /* do nothing */
+        }
     }
 }
+
 ```
