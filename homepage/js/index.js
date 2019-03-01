@@ -1,8 +1,79 @@
 var clock, scene, camera, renderer, controls, stats, particles;
 var mouse = {x:0, y:0};
-var arrows = {x:0, y:0};
+var cameraTranslate = {x:0, y:0, z:0};
+var cameraRotate = {x:0, y:0, z:0}
 
 var particles = [];
+var entities = [];
+
+// delcare disk stuff
+var particleSprite = new THREE.TextureLoader().load('./images/disk.png');
+
+function Fabric(origin, dimx, dimy) {
+	this.origin = {x: 0, y:0, z:0};
+	this.origin.x = origin.x; 
+	this.origin.y = origin.y; 
+	this.origin.z = origin.z;
+	this.fabricObj = {};
+	this.spacing = 10;
+	this.particles = [];
+
+	for(let i=0; i<dimx; i++) {
+		let row = [];
+		for(let j=0; j<dimy; j++) {
+			row.push({
+				x: -0.5*this.spacing*(dimx-1) + j * this.spacing,
+				y: -0.5*this.spacing*(dimy-1) + i * this.spacing,
+				z: 0,
+			});
+		}
+		this.particles.push(row);
+	}
+
+	this.init = function(){
+		// make particles
+		// let fabricGeometry = new THREE.Geometry();
+		let fabricGeometry = new THREE.BufferGeometry();
+		var particleMaterial = new THREE.PointsMaterial({
+			size: 10,
+			sizeAttenuation: false,
+			map: particleSprite,
+			alphaTest: 0.5,
+			transparent: true,
+			// vertexColors: THREE.VertexColors
+		});
+		let myhue = Math.random();
+		particleMaterial.color.setHSL(myhue, 0.3, 0.7);
+
+		let vertices = [];
+		for(let i=0; i<this.particles.length; i++) {
+			for(let j=0; j<this.particles[i].length; j++) {
+				var vertex = new THREE.Vector3();	
+				vertex.x = this.origin.x + this.particles[i][j].x;
+				vertex.y = this.origin.y + this.particles[i][j].y;
+				vertex.z = this.origin.z + this.particles[i][j].z;
+				// fabricGeometry.vertices.push( vertex );
+				vertices.push(vertex.x, vertex.y, vertex.z);
+			}
+		}
+		// fabricGeometry.colors.push(new THREE.Color(0xffffff));
+
+		fabricGeometry.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+
+		let fabricObj = new THREE.Points(fabricGeometry, particleMaterial);
+		this.fabricObj = fabricObj;
+		scene.add(fabricObj);
+	}	
+	this.loop = function(){
+
+	}
+	this.kill = function(){
+
+	}
+}
+
+var myfabric;
+var rotationRadius = 3000;
 
 function init() {
 	stats = initStats();
@@ -13,9 +84,9 @@ function init() {
 	camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 5000);
 	//first, let's render a wireframe 1000-wide cube, where everything is going to happen.
 
-	camera.position.z = 3000;
-	camera.position.y = 1000;
-	camera.position.x = 0;
+	camera.position.z = 2000;
+	camera.position.y = 1500;
+	camera.position.x = 1500;
 	camera.lookAt(0, 0, 0);
 
 
@@ -24,11 +95,8 @@ function init() {
 	scene.add(camera);
 	
 
+	// debugging purposes - set up cube
 	var cubeGeometry = new THREE.BoxGeometry(1000, 1000, 1000);
-	var cubeMaterial = new THREE.MeshLambertMaterial({color: 0x00ff00});
-	var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-	// scene.add(cube);
-
 	var wireframe = new THREE.WireframeGeometry(cubeGeometry);
 	var line = new THREE.LineSegments(wireframe);
 	scene.add(line);
@@ -50,28 +118,28 @@ function init() {
 	scene.add( lights[ 2 ] );
 
 
-	var geometry = new THREE.Geometry();
-	sprite = new THREE.TextureLoader().load('./images/disk.png');
-	//make particles
-	for(var zval=-1000; zval<1000; zval++) {
-		var vertex = new THREE.Vector3();
-		vertex.x = 2000 * Math.random() - 1000;
-		vertex.y = 2000 * Math.random() - 1000;
-		vertex.z = zval;
+	// var geometry = new THREE.Geometry();
+	// sprite = new THREE.TextureLoader().load('./images/disk.png');
+	// //make particles
+	// for(var zval=-1000; zval<1000; zval++) {
+	// 	var vertex = new THREE.Vector3();
+	// 	vertex.x = 2000 * Math.random() - 1000;
+	// 	vertex.y = 2000 * Math.random() - 1000;
+	// 	vertex.z = zval;
 
-		geometry.vertices.push( vertex );
-		geometry.colors.push(new THREE.Color(0xffffff));
-	}
+	// 	geometry.vertices.push( vertex );
+	// 	geometry.colors.push(new THREE.Color(0xffffff));
+	// }
+
+	// material = new THREE.PointsMaterial({size: 20, sizeAttenuation: true, map: sprite, alphaTest: 0.5, transparent: true, vertexColors: THREE.VertexColors} );
+
+	// particles = new THREE.Points(geometry, material);
+	// scene.add(particles);
 
 
-
-	material = new THREE.PointsMaterial({size: 20, sizeAttenuation: true, map: sprite, alphaTest: 0.5, transparent: true, vertexColors: THREE.VertexColors} );
-
-	particles = new THREE.Points(geometry, material);
-
-	// particles.
-	scene.add(particles);
-	console.log(geometry);
+	
+	myfabric = new Fabric({x:0, y:0, z:0}, 10, 10);
+	myfabric.init();
 
 	//render
 	renderer = new THREE.WebGLRenderer();
@@ -83,7 +151,18 @@ function init() {
 }
 
 function renderScene() {
-	updateParticles();
+	// updateParticles();
+	for(let i=0; i<entities.length; i++) {
+		entities[i].loop();
+	}
+
+	camera.position.y += cameraTranslate.y * 20;
+	camera.position.x += cameraTranslate.x * 20;
+	camera.position.z += cameraTranslate.z * 20;
+
+	camera.rotation.x += cameraRotate.y * 0.01;
+	camera.rotation.y += cameraRotate.x * 0.01;
+
 	stats.update();
 	requestAnimationFrame(renderScene);
 	renderer.render(scene, camera);
@@ -94,8 +173,6 @@ function updateParticles() {
 
 	// camera.position.x += (  mouse.x - camera.position.x*0.6) * 0.1;
 	// camera.position.y += (- mouse.y - camera.position.y*0.6) * 0.1;
-	camera.position.y += arrows.y * 20;
-	camera.position.x += arrows.x * 20;
 
 	camera.lookAt(scene.position);
 
@@ -127,18 +204,31 @@ window.addEventListener('mousemove', onMouseMove, false);
 
 function onKeydown( event ) {
 	if(event.keyCode == 38) { // up
-		arrows.y = 1;
+		cameraTranslate.y = 1;
 	} else if(event.keyCode == 39) { // right
-		arrows.x = 1;
+		cameraTranslate.x = 1;
 	} else if(event.keyCode == 40) { // down
-		arrows.y = -1;
+		cameraTranslate.y = -1;
 	} else if(event.keyCode == 37) { // left
-		arrows.x = -1;
+		cameraTranslate.x = -1;
+	} else if(event.keyCode == 90) { // z
+		cameraTranslate.z = 1;
+	} else if(event.keyCode == 88) { // x
+		cameraTranslate.z = -1;
+	} else if(event.keyCode == 87) { // w
+		cameraRotate.y = 1;
+	} else if(event.keyCode == 83) { // s
+		cameraRotate.y = -1;
+	} else if(event.keyCode == 65) { // a
+		cameraRotate.x = -1;
+	} else if(event.keyCode == 68) { // d
+		cameraRotate.x = 1;
 	}
 }
 window.addEventListener('keydown',onKeydown,false);
 function onKeyup( event ) {
-	arrows.x = 0; arrows.y = 0;
+	cameraTranslate.x = 0; cameraTranslate.y = 0; cameraTranslate.z = 0;
+	cameraRotate.x = 0; cameraRotate.y = 0;
 }
 window.addEventListener('keyup',onKeyup,false);
 
