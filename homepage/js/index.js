@@ -41,11 +41,11 @@ function Fabric(origin, dimx, dimy) {
 			map: particleSprite,
 			alphaTest: 0.5,
 			transparent: true,
-			// vertexColors: THREE.VertexColors
+			vertexColors: THREE.VertexColors
 		});
-		let myhue = Math.random();
 		// particleMaterial.color.setHSL(myhue, 0.3, 0.7);
-		let mycolor = new THREE.Color(0xffffff);
+		let myhue = Math.random();
+		let mycolor = new THREE.Color();
 		mycolor.setHSL(myhue, 0.3, 0.7);
 
 		let vertices = [];
@@ -57,7 +57,6 @@ function Fabric(origin, dimx, dimy) {
 				vertex.z = this.particles[i][j].z;
 				fabricGeometry.vertices.push( vertex );
 				fabricGeometry.colors.push(mycolor);
-				// vertices.push(vertex.x, vertex.y, vertex.z);
 			}
 		}
 
@@ -82,6 +81,7 @@ function Fabric(origin, dimx, dimy) {
 									1*Math.sin(0.5*oldvertices[i].y+clock.getElapsedTime()*4);
 		}
 		this.fabricObj.geometry.verticesNeedUpdate=true;
+		this.fabricObj.geometry.colorsNeedUpdate=true;
 
 		if(this.origin.z>510) { this.origin.z = -500; }
 		if(this.origin.z<-510) { this.origin.z = 500; }
