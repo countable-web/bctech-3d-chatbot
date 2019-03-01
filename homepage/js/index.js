@@ -45,8 +45,6 @@ function Fabric(origin, dimx, dimy) {
 		});
 		// particleMaterial.color.setHSL(myhue, 0.3, 0.7);
 		let myhue = Math.random();
-		let mycolor = new THREE.Color();
-		mycolor.setHSL(myhue, 0.3, 0.7);
 
 		let vertices = [];
 		for(let i=0; i<this.particles.length; i++) {
@@ -56,6 +54,8 @@ function Fabric(origin, dimx, dimy) {
 				vertex.y = this.particles[i][j].y;
 				vertex.z = this.particles[i][j].z;
 				fabricGeometry.vertices.push( vertex );
+				let mycolor = new THREE.Color();
+				mycolor.setHSL(myhue, 0.3, 0.7);
 				fabricGeometry.colors.push(mycolor);
 			}
 		}
@@ -75,10 +75,13 @@ function Fabric(origin, dimx, dimy) {
 		this.fabricObj.position.z = this.origin.z;
 
 		let oldvertices = this.fabricObj.geometry.vertices;
+		// let oldcolors = this.fabricObj.geometry.colors;
 
 		for(let i=0; i<oldvertices.length; i++) {
 			oldvertices[i].z+=1*Math.sin(clock.getElapsedTime()*4)+
 									1*Math.sin(0.5*oldvertices[i].y+clock.getElapsedTime()*4);
+			
+			this.fabricObj.geometry.colors[i].offsetHSL(0.01, 0, 0);
 		}
 		this.fabricObj.geometry.verticesNeedUpdate=true;
 		this.fabricObj.geometry.colorsNeedUpdate=true;
@@ -137,8 +140,8 @@ function init() {
 	scene.add( lights[ 1 ] );
 	scene.add( lights[ 2 ] );
 
-
-	for(let i=0; i<20; i++) {
+	// create fabrics
+	for(let i=0; i<1; i++) {
 		let myfabric = new Fabric({
 			x:-500+Math.random()*1000, 
 			y:-500+Math.random()*1000, 
