@@ -10,6 +10,12 @@ var entities = [];
 var particleSprite = new THREE.TextureLoader().load('./images/disk.png');
 
 
+const cameraStates = {
+	third: {x:1500, y:1000, z:800},
+	first: {x:0, y:0, z:1},
+}
+
+
 
 
 function init() {
@@ -19,12 +25,8 @@ function init() {
 	clock.start();
 
 	camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 5000);
-	//first, let's render a wireframe 1000-wide cube, where everything is going to happen.
+	changeCamera('third');
 
-	camera.position.z = 2000;
-	camera.position.y = 1500;
-	camera.position.x = 1500;
-	camera.lookAt(0, 0, 0);
 
 
 	scene = new THREE.Scene();
@@ -101,17 +103,13 @@ function renderScene() {
 }
 
 function changeCamera(perspective) {
-	if (perspective == 'first') {
-		camera.position.x = 0;
-		camera.position.y = 0;
-		camera.position.z = 1;
-		camera.lookAt(0, 0, 0);
-	} else if (perspective == 'third') {
-		camera.position.z = 2000;
-		camera.position.y = 1500;
-		camera.position.x = 1500;
-		camera.lookAt(0, 0, 0);
-	}
+	let cameraState = cameraStates[perspective];
+	console.log(perspective);
+	console.log(cameraStates[perspective]);
+	camera.position.x = cameraState.x;
+	camera.position.y = cameraState.y;
+	camera.position.z = cameraState.z;
+	camera.lookAt(0, 0, 0);
 }
 
 

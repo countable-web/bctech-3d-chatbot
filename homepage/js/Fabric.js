@@ -25,8 +25,8 @@ function Fabric(origin, dimx, dimy) {
 		let fabricGeometry = new THREE.Geometry();
 		// let fabricGeometry = new THREE.BufferGeometry();
 		var particleMaterial = new THREE.PointsMaterial({
-			size: 10,
-			sizeAttenuation: false,
+			size: 20,
+			sizeAttenuation: true,
 			map: particleSprite,
 			alphaTest: 0.5,
 			transparent: true,
