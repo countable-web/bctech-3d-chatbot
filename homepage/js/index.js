@@ -17,6 +17,7 @@ function Fabric(origin, dimx, dimy) {
 	this.fabricObj = {};
 	this.spacing = 10;
 	this.particles = [];
+	this.alive = true;
 
 	for(let i=0; i<dimx; i++) {
 		let row = [];
@@ -51,9 +52,9 @@ function Fabric(origin, dimx, dimy) {
 		for(let i=0; i<this.particles.length; i++) {
 			for(let j=0; j<this.particles[i].length; j++) {
 				var vertex = new THREE.Vector3();	
-				vertex.x = this.origin.x + this.particles[i][j].x;
-				vertex.y = this.origin.y + this.particles[i][j].y;
-				vertex.z = this.origin.z + this.particles[i][j].z;
+				vertex.x = this.particles[i][j].x;
+				vertex.y = this.particles[i][j].y;
+				vertex.z = this.particles[i][j].z;
 				fabricGeometry.vertices.push( vertex );
 				fabricGeometry.colors.push(mycolor);
 				// vertices.push(vertex.x, vertex.y, vertex.z);
@@ -65,6 +66,9 @@ function Fabric(origin, dimx, dimy) {
 		// fabricGeometry.dynamic = true;
 
 		let fabricObj = new THREE.Points(fabricGeometry, particleMaterial);
+		fabricObj.position.x = this.origin.x;
+		fabricObj.position.y = this.origin.y;
+		fabricObj.position.z = this.origin.z;
 		this.fabricObj = fabricObj;
 		scene.add(fabricObj);
 	}	
@@ -91,7 +95,8 @@ function Fabric(origin, dimx, dimy) {
 		if(this.origin.z<-510) { this.origin.z = 500; }
 	}
 	this.kill = function(){
-
+		scene.remove(this.fabricObj);
+		this.alive = false;
 	}
 }
 var rotationRadius = 3000;
@@ -141,7 +146,7 @@ function init() {
 	scene.add( lights[ 2 ] );
 
 
-	for(let i=0; i<20; i++) {
+	for(let i=0; i<1; i++) {
 		let myfabric = new Fabric({
 			x:-500+Math.random()*1000, 
 			y:-500+Math.random()*1000, 
@@ -174,7 +179,9 @@ function renderScene() {
 	camera.rotation.y += cameraRotate.x * 0.01;
 
 	for(let i=0; i<entities.length; i++) {
-		entities[i].loop();
+		if(entities[i].alive) {
+			entities[i].loop();
+		}
 	}
 
 	stats.update();
