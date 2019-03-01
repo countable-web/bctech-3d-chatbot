@@ -7,10 +7,10 @@ var frames = [];
 
 // declare a new sprite
 var terrain = {
-	particles: [],
+	terrainObj: {},
 	colorMap: new ColorMap(
-		{h: 0.83, s:1.0, l:0.9},
-		{h: 0.5, s:1.0, l:0.9}),
+		{h: 0.83, s:1.0, l:0.7},
+		{h: 0.5, s:1.0, l:0.7}),
 };
 var particleSprite = new THREE.TextureLoader().load('./images/disk.png');
 
@@ -78,20 +78,19 @@ function init() {
 	const ttop = -tdepth/2;
 	for(let i=0; i<tx; i++) {
 		for(let j=0; j<tz; j++) {
-			var vertex = new THREE.Vector3();	
+			var vertex = new THREE.Vector3();
 			vertex.x = tleft + tspace * i;
 			vertex.z = ttop + tspace * j;
-			vertex.y = noise.simplex3(vertex.x/300, vertex.z/300, 1)*70;
 			terrainGeometry.vertices.push( vertex );
 			let mycolor = new THREE.Color();
-			myHSL = terrain.colorMap.getColor(vertex.y/70);
-			mycolor.setHSL(myHSL.h, myHSL.s, myHSL.l);
 			terrainGeometry.colors.push(mycolor);
 		}
 	}
-
 	let terrainObj = new THREE.Points(terrainGeometry, terrainMaterial);
+	terrain.terrainObj = terrainObj;
 	scene.add(terrainObj);
+
+	updateTerrain();
 
 
 	// // create fabrics
@@ -117,10 +116,21 @@ function init() {
 	var orbit = new THREE.OrbitControls( camera, renderer.domElement );
 	orbit.enableZoom = false;
 }
-
+function updateTerrain() {
+	var terrainVertices = terrain.terrainObj.geometry.vertices;
+	var terrainColors = terrain.terrainObj.geometry.colors;
+	for(var i=0; i<terrainVertices.length; i++) {
+		let myVertex = terrainVertices[i];
+		myVertex.y = noise.simplex3(myVertex.x/300, myVertex.z/300, clock.getElapsedTime())*70;
+		let myColor = terrainColors[i];
+		myHSL = terrain.colorMap.getColor(myVertex.y/70);
+		myColor.setHSL(myHSL.h, myHSL.s, myHSL.l);
+	}
+	terrain.terrainObj.geometry.verticesNeedUpdate=true;
+	terrain.terrainObj.geometry.colorsNeedUpdate=true;
+}
 function renderScene() {
-	// updateParticles();
-
+	//update camera
 	camera.position.y += cameraTranslate.y * 20;
 	camera.position.x += cameraTranslate.x * 20;
 	camera.position.z += cameraTranslate.z * 20;
@@ -128,11 +138,14 @@ function renderScene() {
 	camera.rotation.x += cameraRotate.y * 0.01;
 	camera.rotation.y += cameraRotate.x * 0.01;
 
+	//update entities
 	for(let i=0; i<entities.length; i++) {
 		if(entities[i].alive) {
 			entities[i].loop();
 		}
 	}
+
+	updateTerrain()
 
 	stats.update();
 	requestAnimationFrame(renderScene);
