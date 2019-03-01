@@ -69,11 +69,12 @@ function Fabric(origin, dimx, dimy) {
 		scene.add(fabricObj);
 	}	
 	this.loop = function(){
-		// this.origin.z+=10;
+		this.origin.z+=3;
 		/* TODO MAJOR POSITIONING BUG??? 
 		* things get placed out of bounds all the time, 
 		* only when these lines below are uncommented
 		*/
+
 		this.fabricObj.position.x = this.origin.x;
 		this.fabricObj.position.y = this.origin.y;
 		this.fabricObj.position.z = this.origin.z;
