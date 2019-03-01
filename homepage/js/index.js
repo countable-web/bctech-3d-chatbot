@@ -57,7 +57,7 @@ function init() {
 	scene.add( lights[ 2 ] );
 
 	// create fabrics
-	for(let i=0; i<20; i++) {
+	for(let i=0; i<40; i++) {
 		let myfabric = new Fabric({
 			x:-500+Math.random()*1000, 
 			y:-500+Math.random()*1000, 
@@ -68,7 +68,7 @@ function init() {
 
 	//render
 	renderer = new THREE.WebGLRenderer();
-	renderer.setClearColor (0x888888, 1);
+	renderer.setClearColor (0x333333, 1);
 
 	//finish
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
@@ -104,7 +104,7 @@ function changeCamera(perspective) {
 	if (perspective == 'first') {
 		camera.position.x = 0;
 		camera.position.y = 0;
-		camera.position.z = -1;
+		camera.position.z = 1;
 		camera.lookAt(0, 0, 0);
 	} else if (perspective == 'third') {
 		camera.position.z = 2000;
