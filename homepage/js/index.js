@@ -61,10 +61,6 @@ function Fabric(origin, dimx, dimy) {
 			}
 		}
 
-		// fabricGeometry.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
-		// fabricGeometry.__dirtyVertices = true;
-		// fabricGeometry.dynamic = true;
-
 		let fabricObj = new THREE.Points(fabricGeometry, particleMaterial);
 		fabricObj.position.x = this.origin.x;
 		fabricObj.position.y = this.origin.y;
@@ -74,10 +70,6 @@ function Fabric(origin, dimx, dimy) {
 	}	
 	this.loop = function(){
 		this.origin.z+=3;
-		/* TODO MAJOR POSITIONING BUG??? 
-		* things get placed out of bounds all the time, 
-		* only when these lines below are uncommented
-		*/
 
 		this.fabricObj.position.x = this.origin.x;
 		this.fabricObj.position.y = this.origin.y;
@@ -146,7 +138,7 @@ function init() {
 	scene.add( lights[ 2 ] );
 
 
-	for(let i=0; i<1; i++) {
+	for(let i=0; i<20; i++) {
 		let myfabric = new Fabric({
 			x:-500+Math.random()*1000, 
 			y:-500+Math.random()*1000, 
@@ -188,27 +180,6 @@ function renderScene() {
 	requestAnimationFrame(renderScene);
 	renderer.render(scene, camera);
 }
-
-// function updateParticles() {
-// 	var time = clock.getElapsedTime();
-
-// 	// camera.position.x += (  mouse.x - camera.position.x*0.6) * 0.1;
-// 	// camera.position.y += (- mouse.y - camera.position.y*0.6) * 0.1;
-
-// 	camera.lookAt(scene.position);
-
-// 	for(var i=0; i<particles.geometry.vertices.length; i++) {
-// 		particles.geometry.vertices[i].z+=30;
-// 		if(particles.geometry.vertices[i].z>1000) {
-// 			particles.geometry.vertices[i].z=-1000;
-// 		}
-// 	}
-// 	particles.geometry.verticesNeedUpdate=true;
-// 	// h = time * 0.1 % 360;
-// 	// material.color.setHSL(h, 0.5, 0.5);
-// }
-
-
 
 
 function onResize() {
