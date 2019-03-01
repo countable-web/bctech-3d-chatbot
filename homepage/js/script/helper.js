@@ -23,3 +23,33 @@ function initStats() {
 
 	return statcontroller;
 }
+
+function ColorMap(startColor, endColor) {
+	this.startColor = {
+		h: startColor.h, 
+		s: startColor.s, 
+		l: startColor.l
+	};
+	this.endColor = {
+		h: endColor.h, 
+		s: endColor.s, 
+		l: endColor.l
+	};
+	this.delColor = {
+		h: endColor.h-startColor.h, 
+		s: endColor.s-startColor.s, 
+		l: endColor.l-startColor.l
+	};
+	this.progess = 0;
+	this.nudge = function(amount) {
+		this.progress += amount ? amount : 0.01;
+		if(progress>1) progress = 0;
+	}
+	this.getColor = function() {
+		return {
+			h: startColor.h + progress * delColor.h,
+			s: startColor.s + progress * delColor.s,
+			l: startColor.l + progress * delColor.l,
+		};
+	}
+}
