@@ -52,11 +52,9 @@ function init() {
 
 
 	// create fabrics
-	for(let i=0; i<1; i++) {
-		let myfabric = new Fabric({x:0, y:0, z:0}, 10, 10);
-		myfabric.init();
-		entities.push(myfabric);
-	}
+	let myEntity = new Curtain({x:0, y:0, z:0}, 30, 10);
+	myEntity.init();
+	entities.push(myEntity);
 
 	//finish
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
@@ -96,3 +94,4 @@ function toggleVisible(object) {
 }
 
 init();
+toggleVisible('lines');
