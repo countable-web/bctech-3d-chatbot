@@ -2,6 +2,8 @@ var clock, scene, camera, renderer, controls, stats, particles;
 var cameraTranslate = {x:0, y:0, z:0};
 var cameraRotate = {x:0, y:0, z:0}
 
+const TERRAIN_BASELINE = -200;
+
 var entities = [];
 var frames = [];
 
@@ -30,12 +32,10 @@ function init() {
 	clock.start();
 
 	camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 5000);
-	changeCamera('third');
-
-
+	changeCamera('first');
 
 	scene = new THREE.Scene();
-	// scene.fog = new THREE.FogExp2(0x000000, 0.001);
+	scene.fog = new THREE.FogExp2(0x000000, 0.001);
 	scene.add(camera);
 	
 
@@ -69,18 +69,16 @@ function init() {
 		vertexColors: THREE.VertexColors
 	});
 
-	const tx = 100;
-	const tz = 100;
-	const tspace = 10;
-	const twidth = tx * tspace;
-	const tdepth = tz * tspace;
-	const tleft = -twidth/2;
-	const ttop = -tdepth/2;
+	// create terrain
+	const tx = 100; const tz = 100; const tspace = 20;
+	const twidth = tx * tspace; const tdepth = tz * tspace;
+	const tleft = -twidth/2; const ttop = -tdepth/2;
 	for(let i=0; i<tx; i++) {
 		for(let j=0; j<tz; j++) {
 			var vertex = new THREE.Vector3();
 			vertex.x = tleft + tspace * i;
 			vertex.z = ttop + tspace * j;
+			vertex.y = TERRAIN_BASELINE;
 			terrainGeometry.vertices.push( vertex );
 			let mycolor = new THREE.Color();
 			terrainGeometry.colors.push(mycolor);
@@ -121,7 +119,7 @@ function updateTerrain() {
 	var terrainColors = terrain.terrainObj.geometry.colors;
 	for(var i=0; i<terrainVertices.length; i++) {
 		let myVertex = terrainVertices[i];
-		myVertex.y = noise.simplex3(myVertex.x/300, myVertex.z/300, clock.getElapsedTime())*70;
+		myVertex.y = TERRAIN_BASELINE+noise.simplex3(myVertex.x/500, myVertex.z/500, clock.getElapsedTime()/10)*70;
 		let myColor = terrainColors[i];
 		myHSL = terrain.colorMap.getColor(myVertex.y/70);
 		myColor.setHSL(myHSL.h, myHSL.s, myHSL.l);
@@ -199,3 +197,4 @@ function onKeyup( event ) {
 window.addEventListener('keyup',onKeyup,false);
 
 init();
+toggleVisible('lines');
