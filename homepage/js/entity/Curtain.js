@@ -9,6 +9,7 @@ function Curtain(origin, length, radius) {
 	this.spacing = 5;
 	this.particles = [];
 	this.alive = true;
+	this.colormap = {};
 
 	for(let i=0; i<length; i++) {
 		let row = [];
@@ -42,6 +43,9 @@ function Curtain(origin, length, radius) {
 		});
 		// particleMaterial.color.setHSL(myhue, 0.3, 0.7);
 		let myhue = Math.random();
+		let startcolor = {h:myhue, s: 0.7, l: 0.8};
+		let endcolor = {h:(myhue+0.25) % 1, s:0.7, l:0.8};
+		this.colormap = new ColorMap(startcolor, endcolor);
 
 		let vertices = [];
 		let particle_index =0 ;
@@ -56,7 +60,8 @@ function Curtain(origin, length, radius) {
 			entityGeometry.vertices.push( vertex );
 
 			let mycolor = new THREE.Color();
-			mycolor.setHSL(myhue, 0.3, 0.7);
+			let newcolor = this.colormap.getColor(currR/25);
+			mycolor.setHSL(newcolor.h, newcolor.s, newcolor.l);
 			entityGeometry.colors.push(mycolor);
 		}
 
@@ -66,6 +71,7 @@ function Curtain(origin, length, radius) {
 		entityObj.position.z = this.origin.z;
 		this.entityObj = entityObj;
 		scene.add(entityObj);
+
 	}	
 	this.loop = function(){
 		this.entityObj.position.x = this.origin.x;
@@ -87,7 +93,7 @@ function Curtain(origin, length, radius) {
 		// 	// oldvertices[i].z+=1*Math.sin(clock.getElapsedTime()*4)+
 		// 	// 						1*Math.sin(0.5*oldvertices[i].y+clock.getElapsedTime()*4);
 			
-			this.entityObj.geometry.colors[i].offsetHSL(0.01, 0, 0);
+			this.entityObj.geometry.colors[i].offsetHSL(0.002, 0, 0);
 		}
 		this.entityObj.geometry.verticesNeedUpdate=true;
 		this.entityObj.geometry.colorsNeedUpdate=true;
