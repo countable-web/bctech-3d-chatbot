@@ -2,7 +2,7 @@ var clock, scene, camera, renderer, controls, stats, particles;
 var cameraTranslate = {x:0, y:0, z:0};
 var cameraRotate = {x:0, y:0, z:0}
 
-const TERRAIN_BASELINE = -200;
+const TERRAIN_BASELINE = -300;
 
 var entities = [];
 var frames = [];
@@ -35,7 +35,7 @@ function init() {
 	changeCamera('first');
 
 	scene = new THREE.Scene();
-	scene.fog = new THREE.FogExp2(0x000000, 0.001);
+	scene.fog = new THREE.FogExp2(0x000000, 0.0015);
 	scene.add(camera);
 	
 
@@ -91,7 +91,7 @@ function init() {
 	updateTerrain();
 
 
-	// // create fabrics
+	// create fabrics
 	// for(let i=0; i<40; i++) {
 	// 	let myfabric = new Fabric({
 	// 		x:-500+Math.random()*1000, 
@@ -100,6 +100,16 @@ function init() {
 	// 	myfabric.init();
 	// 	entities.push(myfabric);
 	// }
+	for(let i=0; i<30; i++) {
+		let mycurtain = new Curtain({
+			x:-300+Math.random()*800, 
+			y:-300+Math.random()*800, 
+			z:-300+Math.random()*800}, 40, 10);
+
+		mycurtain.init();
+		mycurtain.entityObj.rotateOnAxis(new THREE.Vector3(0, 1, 0), Math.random()*2*Math.PI)
+		entities.push(mycurtain);
+	}
 
 
 	//render
@@ -198,3 +208,4 @@ window.addEventListener('keyup',onKeyup,false);
 
 init();
 toggleVisible('lines');
+// changeCamera('third');

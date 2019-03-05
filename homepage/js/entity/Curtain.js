@@ -6,7 +6,7 @@ function Curtain(origin, length, radius) {
 	this.origin.y = origin.y; 
 	this.origin.z = origin.z;
 	this.entityObj = {};
-	this.spacing = 5;
+	this.spacing = 8;
 	this.particles = [];
 	this.alive = true;
 	this.colormap = {};
@@ -16,7 +16,7 @@ function Curtain(origin, length, radius) {
 		for(let j=0; j<radius; j++) {
 			let rval = -0.5*this.spacing*(radius-1) + j * this.spacing;
 			let zval = -0.5*this.spacing*(length-1) + i * this.spacing;
-			let thetaval = zval/20;
+			let thetaval = zval/30;
 
 			// let xval = r * Math.sin(zval/20);
 			// let yval = r * Math.cos(zval/20);
@@ -34,7 +34,7 @@ function Curtain(origin, length, radius) {
 		let entityGeometry = new THREE.Geometry();
 
 		var particleMaterial = new THREE.PointsMaterial({
-			size: 10,
+			size: 15,
 			sizeAttenuation: true,
 			map: particleSprite,
 			alphaTest: 0.5,
@@ -74,9 +74,7 @@ function Curtain(origin, length, radius) {
 
 	}	
 	this.loop = function(){
-		this.entityObj.position.x = this.origin.x;
-		this.entityObj.position.y = this.origin.y;
-		this.entityObj.position.z = this.origin.z;
+		this.entityObj.translateZ(3);
 
 		let oldvertices = this.entityObj.geometry.vertices;
 		let oldcolors = this.entityObj.geometry.colors;
@@ -88,16 +86,24 @@ function Curtain(origin, length, radius) {
 			oldvertices[i].x = this.particles[i].r * Math.cos(this.particles[i].theta);
 			oldvertices[i].y = this.particles[i].r * Math.sin(this.particles[i].theta);
 
-
-
-		// 	// oldvertices[i].z+=1*Math.sin(clock.getElapsedTime()*4)+
-		// 	// 						1*Math.sin(0.5*oldvertices[i].y+clock.getElapsedTime()*4);
-			
 			this.entityObj.geometry.colors[i].offsetHSL(0.002, 0, 0);
 		}
 		this.entityObj.geometry.verticesNeedUpdate=true;
 		this.entityObj.geometry.colorsNeedUpdate=true;
 
+		if(this.entityObj.position.z > 1000) {
+			this.entityObj.position.z = - 1000;
+		} else if(this.entityObj.position.z < -1000) {
+			this.entityObj.position.z = 1000;
+		} if(this.entityObj.position.x > 1000) {
+			this.entityObj.position.z = -1000;
+		} else if(this.entityObj.position.x < -1000) {
+			this.entityObj.position.z = 1000;
+		}
+
+
+		// if(this.origin.z>700) { this.origin.z = -700; }
+		// if(this.origin.z<-700) { this.origin.z = 700; }
 	}
 	this.kill = function(){
 		scene.remove(this.entityObj);
