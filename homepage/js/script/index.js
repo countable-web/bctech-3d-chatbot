@@ -35,7 +35,7 @@ function init() {
 	changeCamera('first');
 
 	scene = new THREE.Scene();
-	scene.fog = new THREE.FogExp2(0x000000, 0.0015);
+	// scene.fog = new THREE.FogExp2(0x000000, 0.0015);
 	scene.add(camera);
 	
 
@@ -100,7 +100,7 @@ function init() {
 	// 	myfabric.init();
 	// 	entities.push(myfabric);
 	// }
-	for(let i=0; i<30; i++) {
+	for(let i=0; i<1; i++) {
 		let mycurtain = new Curtain({
 			x:-300+Math.random()*800, 
 			y:-300+Math.random()*800, 
@@ -207,5 +207,5 @@ function onKeyup( event ) {
 window.addEventListener('keyup',onKeyup,false);
 
 init();
-toggleVisible('lines');
-// changeCamera('third');
+// toggleVisible('lines');
+changeCamera('third');

@@ -91,14 +91,14 @@ function Curtain(origin, length, radius) {
 		this.entityObj.geometry.verticesNeedUpdate=true;
 		this.entityObj.geometry.colorsNeedUpdate=true;
 
-		if(this.entityObj.position.z > 1000) {
-			this.entityObj.position.z = - 1000;
-		} else if(this.entityObj.position.z < -1000) {
-			this.entityObj.position.z = 1000;
-		} if(this.entityObj.position.x > 1000) {
-			this.entityObj.position.z = -1000;
-		} else if(this.entityObj.position.x < -1000) {
-			this.entityObj.position.z = 1000;
+		if(this.entityObj.position.z > 500) {
+			this.entityObj.position.z = - 400;
+		} else if(this.entityObj.position.z < -500) {
+			this.entityObj.position.z = 400;
+		} if(this.entityObj.position.x > 500) {
+			this.entityObj.position.x = -400;
+		} else if(this.entityObj.position.x < -500) {
+			this.entityObj.position.x = 400;
 		}
 
 
