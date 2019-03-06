@@ -78,20 +78,12 @@ function load() {
 	if(messageObj == null) return;
 
 	$("#log").append($("<p></p>").text(messageObj.message));
-	$("#log").append( 
-		$("<button></button>")
-			.text(messageObj.choices[0])
+	
+	messageObj.choices.map((choice) => {
+		$("#log").append( $("<button></button>")
+			.text(choice)
 			.click(function(){
 				dialogEngine.receiveMessage(0);
-				load();
-			})
-	);
-
-	$("#log").append( 
-		$("<button></button>")
-			.text(messageObj.choices[1])
-			.click(function(){
-				dialogEngine.receiveMessage(1);
 				load();
 			})
 	);
