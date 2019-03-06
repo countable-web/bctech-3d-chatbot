@@ -51,3 +51,8 @@ loop() {
 }
 
 ```
+
+## Storyboarding
+Purely static: One chamber with 3-6 directions to look at. Each direction has a sort of "main event". There's other things floating around in the space, too.
+
+Experiential: Static, then move through a tunnel in hyperspace, then static again.

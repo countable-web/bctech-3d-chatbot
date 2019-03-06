@@ -31,6 +31,8 @@ function PolyCurtain(origin, length, radius) {
 		// make particles
 		var geometry = new THREE.Geometry();
 		var material = new THREE.MeshNormalMaterial();
+		// material.fog = true;
+		// material.lights = true;
 		material.side = THREE.DoubleSide;
 		
 		let width = 10;
