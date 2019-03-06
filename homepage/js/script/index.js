@@ -35,7 +35,7 @@ function init() {
 	changeCamera('first');
 
 	scene = new THREE.Scene();
-	// scene.fog = new THREE.FogExp2(0x000000, 0.0015);
+	scene.fog = new THREE.FogExp2(0x000000, 0.0015);
 	scene.add(camera);
 	
 
@@ -68,6 +68,7 @@ function init() {
 		transparent: true,
 		vertexColors: THREE.VertexColors
 	});
+	var terrainClippingMaterial = new THREE.MeshBasicMaterial();
 
 	// create terrain
 	const tx = 100; const tz = 100; const tspace = 20;

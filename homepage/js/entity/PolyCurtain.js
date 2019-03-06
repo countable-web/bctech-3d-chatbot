@@ -34,7 +34,7 @@ function PolyCurtain(origin, length, radius) {
 		material.side = THREE.DoubleSide;
 		
 		let width = 10;
-		let height = 20;
+		let height = 10;
 		let indices = [];
 		let index = 0;
 
@@ -48,7 +48,13 @@ function PolyCurtain(origin, length, radius) {
 		for(i=0; i<width; i++) {
 			let row = [];
 			for(j=0; j<height; j++) {
-				geometry.vertices.push(new THREE.Vector3(i*t_spacing+t_left,0,j*t_spacing+t_bottom));
+				let radius = i*t_spacing+t_left;
+				let z = j*t_spacing+t_bottom;
+				let theta = z/100;
+				geometry.vertices.push(new THREE.Vector3(
+					radius*Math.cos(theta),
+					radius*Math.sin(theta),
+					z));
 				row.push(index);
 				index++;
 			}
@@ -60,16 +66,6 @@ function PolyCurtain(origin, length, radius) {
 				geometry.faces.push(new THREE.Face3(indices[i+1][j+1], indices[i+1][j], indices[i][j]));
 				geometry.faces.push(new THREE.Face3(indices[i][j+1], indices[i+1][j+1], indices[i][j]));
 			}
-		}
-
-		for(i=0; i<geometry.vertices.length; i++) {
-			let myv = geometry.vertices[i];
-			// myv.x += -5+Math.random()*10;
-			// myv.z += -5+Math.random()*10;
-			let r = myv.x;
-			myv.x = r*Math.cos(myv.z/50);
-			myv.y = r*Math.sin(myv.z/50);
-			// myv.y = 10*noise.simplex3(myv.x/10, myv.z/10,0);
 		}
 
 		geometry.verticesNeedUpdate = true;
@@ -85,8 +81,6 @@ function PolyCurtain(origin, length, radius) {
 
 	}	
 	this.loop = function(){
-		// this.entityObj.translateZ(3);
-
 		// let oldvertices = this.entityObj.geometry.vertices;
 		// let oldcolors = this.entityObj.geometry.colors;
 		// for(let i=0; i<this.particles.length; i++) {
