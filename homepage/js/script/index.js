@@ -1,6 +1,4 @@
 var clock, scene, camera, renderer, controls, stats, particles;
-var cameraTranslate = {x:0, y:0, z:0};
-var cameraRotate = {x:0, y:0, z:0}
 
 const TERRAIN_BASELINE = -300;
 
@@ -35,7 +33,7 @@ function init() {
 	changeCamera('first');
 
 	scene = new THREE.Scene();
-	scene.fog = new THREE.FogExp2(0x000000, 0.0015);
+	scene.fog = new THREE.FogExp2(0x080811, 0.0015);
 	scene.add(camera);
 	
 
@@ -55,41 +53,97 @@ function init() {
 
 	//set up lights
 
-	var ambientLight = new THREE.AmbientLight( 0x222266 );
+	var ambientLight = new THREE.AmbientLight( 0x444444 );
 	scene.add( ambientLight );
 
-	//
-	let terrainGeometry = new THREE.Geometry();
-	var terrainMaterial = new THREE.PointsMaterial({
-		size: 15,
-		sizeAttenuation: true,
-		map: particleSprite,
-		alphaTest: 0.5,
-		transparent: true,
-		vertexColors: THREE.VertexColors
-	});
-	var terrainClippingMaterial = new THREE.MeshBasicMaterial();
+	var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
+	directionalLight.position = new THREE.Vector3(500, 500, 500);
+	// directionalLight.target = new THREE.Vector3(0, 0, 0);
+	scene.add( directionalLight )
 
 	// create terrain
-	const tx = 100; const tz = 100; const tspace = 20;
+	// let terrainGeometry = new THREE.Geometry();
+	// var terrainMaterial = new THREE.PointsMaterial({
+	// 	size: 15,
+	// 	sizeAttenuation: true,
+	// 	map: particleSprite,
+	// 	alphaTest: 0.5,
+	// 	transparent: true,
+	// 	vertexColors: THREE.VertexColors
+	// });
+	// const tx = 100; const tz = 100; const tspace = 20;
+	// const twidth = tx * tspace; const tdepth = tz * tspace;
+	// const tleft = -twidth/2; const ttop = -tdepth/2;
+	// for(let i=0; i<tx; i++) {
+	// 	for(let j=0; j<tz; j++) {
+	// 		var vertex = new THREE.Vector3();
+	// 		vertex.x = tleft + tspace * i;
+	// 		vertex.z = ttop + tspace * j;
+	// 		vertex.y = TERRAIN_BASELINE;
+	// 		terrainGeometry.vertices.push( vertex );
+	// 		let mycolor = new THREE.Color();
+	// 		terrainGeometry.colors.push(mycolor);
+	// 	}
+	// }
+	// let terrainObj = new THREE.Points(terrainGeometry, terrainMaterial);
+
+	let terrainGroup = new THREE.Group();
+
+	let terrainGeometry = new THREE.Geometry();
+	let terrainMaterial = new THREE.MeshPhongMaterial();
+	terrainMaterial.flatShading = true;
+
+	const tx = 100; const tz = 100; const tspace = 40;
 	const twidth = tx * tspace; const tdepth = tz * tspace;
 	const tleft = -twidth/2; const ttop = -tdepth/2;
+	let t_indices = [];
+	let t_index = 0;
 	for(let i=0; i<tx; i++) {
+		let index_row = [];
 		for(let j=0; j<tz; j++) {
 			var vertex = new THREE.Vector3();
 			vertex.x = tleft + tspace * i;
 			vertex.z = ttop + tspace * j;
 			vertex.y = TERRAIN_BASELINE;
-			terrainGeometry.vertices.push( vertex );
-			let mycolor = new THREE.Color();
-			terrainGeometry.colors.push(mycolor);
+			terrainGeometry.vertices.push(vertex);
+			index_row.push(t_index);
+			t_index++;
+		}
+		t_indices.push(index_row);
+	}
+	console.log(t_indices);
+	//create faces
+	for(let i=0; i<tx-1; i++) {
+		for(let j=0; j<tz-1; j++) {
+			terrainGeometry.faces.push(new THREE.Face3(
+				t_indices[i+1][j+1], 
+				t_indices[i+1][j], 
+				t_indices[i][j], null, new THREE.Color(1, 1, 1)));
+			terrainGeometry.faces.push(new THREE.Face3(
+				t_indices[i][j+1], 
+				t_indices[i+1][j+1], 
+				t_indices[i][j]));
 		}
 	}
-	let terrainObj = new THREE.Points(terrainGeometry, terrainMaterial);
+
+	let terrainObj = new THREE.Mesh(terrainGeometry, terrainMaterial);
 	terrain.terrainObj = terrainObj;
-	scene.add(terrainObj);
+	terrainGroup.add(terrainObj);
+
+	let terrainWireframeMaterial = new THREE.MeshBasicMaterial();
+	terrainWireframeMaterial.wireframe = true;
+	terrainWireframeMaterial.color = new THREE.Color(0xc3c3c3)
+	terrainMaterial.flatShading = true;
+	let terrainWireframe = new THREE.Mesh(terrainGeometry, terrainWireframeMaterial);
+	terrainGroup.add(terrainWireframe);
+
+	scene.add(terrainGroup);
+
+	terrainGeometry.computeVertexNormals();
+	terrainGeometry.normalsNeedUpdate = true;
 
 	updateTerrain();
+
 
 
 	// create fabrics
@@ -101,24 +155,26 @@ function init() {
 	// 	myfabric.init();
 	// 	entities.push(myfabric);
 	// }
-	let total = 5;
-	for(let i=0; i<total; i++) {
-		let angleOffset = Math.random()*Math.PI/(3*total);
-		let myTheta = (i/total+angleOffset)*Math.PI*2;
-		let mycurtain = new PolyCurtain({
-			x:Math.cos(myTheta) * 500, 
-			y:0, 
-			z:Math.sin(myTheta) * 500}, 90, 10);
 
-		mycurtain.init();
-		mycurtain.entityObj.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI/2)
-		entities.push(mycurtain);
-	}
+	// let total = 5;
+	// for(let i=0; i<total; i++) {
+	// 	let angleOffset = Math.random()*Math.PI/(3*total);
+	// 	let myTheta = (i/total+angleOffset)*Math.PI*2;
+	// 	let mycurtain = new PolyCurtain({
+	// 		x:Math.cos(myTheta) * 500, 
+	// 		y:0, 
+	// 		z:Math.sin(myTheta) * 500}, 90, 10);
+
+	// 	mycurtain.init();
+	// 	mycurtain.entityObj.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI/2)
+	// 	entities.push(mycurtain);
+	// }
 
 
 	//render
 	renderer = new THREE.WebGLRenderer();
 	renderer.setClearColor (0x080811, 1);
+	// renderer.setClearColor (0x888888, 1);
 
 	//finish
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
@@ -134,28 +190,22 @@ function updateTerrain() {
 	for(var i=0; i<terrainVertices.length; i++) {
 		let myVertex = terrainVertices[i];
 		myVertex.y = TERRAIN_BASELINE+noise.simplex3(myVertex.x/500, myVertex.z/500, clock.getElapsedTime()/10)*70;
-		let myColor = terrainColors[i];
-		myHSL = terrain.colorMap.getColor(myVertex.y/70);
-		myColor.setHSL(myHSL.h, myHSL.s, myHSL.l);
+
+		// let myColor = terrainColors[i];
+		// myHSL = terrain.colorMap.getColor(myVertex.y/70);
+		// myColor.setHSL(myHSL.h, myHSL.s, myHSL.l);
 	}
 	terrain.terrainObj.geometry.verticesNeedUpdate=true;
-	terrain.terrainObj.geometry.colorsNeedUpdate=true;
+	// terrain.terrainObj.geometry.colorsNeedUpdate=true;
 }
 function renderScene() {
-	//update camera
-	camera.position.y += cameraTranslate.y * 20;
-	camera.position.x += cameraTranslate.x * 20;
-	camera.position.z += cameraTranslate.z * 20;
-
-	camera.rotation.x += cameraRotate.y * 0.01;
-	camera.rotation.y += cameraRotate.x * 0.01;
 
 	//update entities
-	for(let i=0; i<entities.length; i++) {
-		if(entities[i].alive) {
-			entities[i].loop();
-		}
-	}
+	// for(let i=0; i<entities.length; i++) {
+	// 	if(entities[i].alive) {
+	// 		entities[i].loop();
+	// 	}
+	// }
 
 	updateTerrain()
 
@@ -166,8 +216,6 @@ function renderScene() {
 
 function changeCamera(perspective) {
 	let cameraState = cameraStates[perspective];
-	console.log(perspective);
-	console.log(cameraStates[perspective]);
 	camera.position.x = cameraState.x;
 	camera.position.y = cameraState.y;
 	camera.position.z = cameraState.z;
@@ -179,36 +227,6 @@ function toggleVisible(object) {
 		frames[1].visible = !frames[1].visible;
 	}
 }
-
-function onKeydown( event ) {
-	if(event.keyCode == 38) { // up
-		cameraTranslate.y = 1;
-	} else if(event.keyCode == 39) { // right
-		cameraTranslate.x = 1;
-	} else if(event.keyCode == 40) { // down
-		cameraTranslate.y = -1;
-	} else if(event.keyCode == 37) { // left
-		cameraTranslate.x = -1;
-	} else if(event.keyCode == 90) { // z
-		cameraTranslate.z = 1;
-	} else if(event.keyCode == 88) { // x
-		cameraTranslate.z = -1;
-	} else if(event.keyCode == 87) { // w
-		cameraRotate.y = 1;
-	} else if(event.keyCode == 83) { // s
-		cameraRotate.y = -1;
-	} else if(event.keyCode == 65) { // a
-		cameraRotate.x = -1;
-	} else if(event.keyCode == 68) { // d
-		cameraRotate.x = 1;
-	}
-}
-window.addEventListener('keydown',onKeydown,false);
-function onKeyup( event ) {
-	cameraTranslate.x = 0; cameraTranslate.y = 0; cameraTranslate.z = 0;
-	cameraRotate.x = 0; cameraRotate.y = 0;
-}
-window.addEventListener('keyup',onKeyup,false);
 
 init();
 toggleVisible('lines');
