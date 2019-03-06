@@ -38,7 +38,7 @@ function PolyCurtain(origin, length, radius) {
 		let indices = [];
 		let index = 0;
 
-		let t_spacing = 10;
+		let t_spacing = 30;
 		let t_width = t_spacing * width;
 		let t_left = -0.5*t_width;
 		let t_height = t_spacing * height;
@@ -67,8 +67,8 @@ function PolyCurtain(origin, length, radius) {
 			// myv.x += -5+Math.random()*10;
 			// myv.z += -5+Math.random()*10;
 			let r = myv.x;
-			myv.x = r*Math.cos(myv.z/30);
-			myv.y = r*Math.sin(myv.z/30);
+			myv.x = r*Math.cos(myv.z/50);
+			myv.y = r*Math.sin(myv.z/50);
 			// myv.y = 10*noise.simplex3(myv.x/10, myv.z/10,0);
 		}
 
@@ -102,19 +102,19 @@ function PolyCurtain(origin, length, radius) {
 		// this.entityObj.geometry.verticesNeedUpdate=true;
 		// this.entityObj.geometry.colorsNeedUpdate=true;
 
-		// if(this.entityObj.position.z > 500) {
-		// 	this.entityObj.position.z = - 400;
-		// } else if(this.entityObj.position.z < -500) {
-		// 	this.entityObj.position.z = 400;
-		// } if(this.entityObj.position.x > 500) {
-		// 	this.entityObj.position.x = -400;
-		// } else if(this.entityObj.position.x < -500) {
-		// 	this.entityObj.position.x = 400;
-		// }
-
-
-		// if(this.origin.z>700) { this.origin.z = -700; }
-		// if(this.origin.z<-700) { this.origin.z = 700; }
+		if(this.entityObj.position.z > 500) {
+			this.entityObj.position.z = - 400;
+		} else if(this.entityObj.position.z < -500) {
+			this.entityObj.position.z = 400;
+		} if(this.entityObj.position.x > 500) {
+			this.entityObj.position.x = -400;
+		} else if(this.entityObj.position.x < -500) {
+			this.entityObj.position.x = 400;
+		} if(this.entityObj.position.y > 500) {
+			this.entityObj.position.y = -400;
+		} else if(this.entityObj.position.y < -500) {
+			this.entityObj.position.y = 400;
+		}
 	}
 	this.kill = function(){
 		scene.remove(this.entityObj);

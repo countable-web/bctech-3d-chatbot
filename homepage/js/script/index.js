@@ -100,14 +100,17 @@ function init() {
 	// 	myfabric.init();
 	// 	entities.push(myfabric);
 	// }
-	for(let i=0; i<1; i++) {
-		let mycurtain = new Curtain({
-			x:-300+Math.random()*800, 
-			y:-300+Math.random()*800, 
-			z:-300+Math.random()*800}, 40, 10);
+	let total = 5;
+	for(let i=0; i<total; i++) {
+		let angleOffset = Math.random()*Math.PI/(3*total);
+		let myTheta = (i/total+angleOffset)*Math.PI*2;
+		let mycurtain = new PolyCurtain({
+			x:Math.cos(myTheta) * 500, 
+			y:0, 
+			z:Math.sin(myTheta) * 500}, 90, 10);
 
 		mycurtain.init();
-		mycurtain.entityObj.rotateOnAxis(new THREE.Vector3(0, 1, 0), Math.random()*2*Math.PI)
+		mycurtain.entityObj.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI/2)
 		entities.push(mycurtain);
 	}
 
@@ -207,5 +210,5 @@ function onKeyup( event ) {
 window.addEventListener('keyup',onKeyup,false);
 
 init();
-// toggleVisible('lines');
-changeCamera('third');
+toggleVisible('lines');
+changeCamera('first');
