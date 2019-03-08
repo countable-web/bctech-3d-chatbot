@@ -1,8 +1,16 @@
+const TIMEOUT_TIME = 1000;
+
+
 var dialogEngine = (function() {
 	var states = [];
 	var index = 0;
 	var childState = null;
+	var respond_bool = false;
 	return {
+		canRespond: function() {
+			console.log(index);
+			return respond_bool;
+		},
 		getStates: function() {
 			return states;
 		},
@@ -12,6 +20,7 @@ var dialogEngine = (function() {
 		sendMessage: function() {
 			//TODO check for end state
 			//(index == states.length-1)
+			respond_bool = true;
 			if(childState != null) {
 				return childState.message;
 			} else {
@@ -19,12 +28,14 @@ var dialogEngine = (function() {
 			}
 		},
 		receiveMessage: function(choice) {
-			//start by running handler
+			//start by saving handlers
+			let myHandler;
 			if(childState != null) {
-				childState.handlers[choice]();
+				myHandler = childState.handlers[choice];
 			} else {
-				states[index].handlers[choice]();
+				myHandler = states[index].handlers[choice];
 			}
+			respond_bool = false;
 			//update states
 			if(childState == null) { // base case
 				if(states[index].children[choice] == null) {
@@ -43,6 +54,7 @@ var dialogEngine = (function() {
 					childState = childState.children[choice];
 				}
 			}
+			myHandler();
 		},
 	};
 })();
@@ -81,11 +93,12 @@ function loadMessage(newMessage) {
 		messageObj = messageMesh;
 	} );
 }
+
 function yes() {
-	dialogEngine.receiveMessage(0);
+	if(dialogEngine.canRespond()) dialogEngine.receiveMessage(0);
 }
 function no() {
-	dialogEngine.receiveMessage(1);
+	if(dialogEngine.canRespond()) dialogEngine.receiveMessage(1);
 }
 
 var handler_countable = function() {
@@ -93,8 +106,8 @@ var handler_countable = function() {
 		loadMessage("We are Countable.\nWe build tomorrow's internet, today.");
 		setTimeout(function() {
 			loadMessage(dialogEngine.sendMessage());
-		}, 3000);
-	}, 3000);
+		}, TIMEOUT_TIME);
+	}, TIMEOUT_TIME);
 }
 var handler_glad = function() {
 	loadMessage("Awesome. We're glad to hear that.");
@@ -135,7 +148,7 @@ var handler_toobad = function() {
 var handler_dotslines = function() {
 	setTimeout(function() {
 		loadMessage(dialogEngine.sendMessage());
-	}, 1000);	
+	}, TIMEOUT_TIME);	
 }
 var handler_lines = function() {
 	loadMessage("Perfect.");
@@ -152,12 +165,13 @@ var showTerrain = function() {
 }
 var handler_terrain = function() {
 	setTimeout(function() {
-		loadMessage("It's time to break down\nsome boundaries.");
+		loadMessage("Here at Countable,\nwe break boundaries.");
 		setTimeout(function() {
 			makeTerrain();
 			destroyBox();
-		}, 1000);
-	}, 1000);	
+			handler_jazzy();
+		}, TIMEOUT_TIME);
+	}, TIMEOUT_TIME);	
 }
 var box;
 var destroyBox = function() {
@@ -200,24 +214,27 @@ var makeTerrain = function() {
 	if(terrainType == "lines") {
 		for(let i=0; i<tx-1; i++) {
 			for(let j=0; j<tz-1; j++) {
+				var face_indices = [t_indices[i][j],t_indices[i+1][j],t_indices[i][j+1],t_indices[i+1][j+1]];
+
 				terrainGeometry.faces.push(new THREE.Face3(
-					t_indices[i+1][j+1], 
-					t_indices[i+1][j], 
-					t_indices[i][j], null, new THREE.Color(1, 1, 1)));
+					face_indices[3], 
+					face_indices[1], 
+					face_indices[0]));
 				terrainGeometry.faces.push(new THREE.Face3(
-					t_indices[i][j+1], 
-					t_indices[i+1][j+1], 
-					t_indices[i][j]));
+					face_indices[2], 
+					face_indices[3], 
+					face_indices[0]));
 			}
 		}
 	}
+	console.log(terrainGeometry.faces);
 
 	if(terrainType == "lines") {
 		let terrainWireframeMaterial = new THREE.MeshBasicMaterial();
 		terrainWireframeMaterial.wireframe = true;
 		terrainWireframeMaterial.color = new THREE.Color(0xc3c3c3)
 
-		let terrainMaterial = new THREE.MeshPhongMaterial();
+		let terrainMaterial = new THREE.MeshPhongMaterial({vertexColors:THREE.VertexColors});
 		terrainMaterial.flatShading = true;
 		terrainMaterials = [terrainMaterial, terrainWireframeMaterial];
 		let terrainObj = createMultiMaterialObject(terrainGeometry, terrainMaterials);
@@ -241,4 +258,88 @@ var makeTerrain = function() {
 
 	terrainEnabled = true;
 	updateTerrain();
+}
+
+var handler_jazzy = function() {
+	setTimeout(function() {
+		loadMessage('This is kind of lame...');
+		setTimeout(function() {
+			loadMessage("Let's spice things up.");
+			setTimeout(function() {
+				loadMessage(dialogEngine.sendMessage());
+				terrain_velocity = 0.003;
+				terrain_height = 70;
+				terrain_width = 0.002;
+			}, TIMEOUT_TIME)
+		}, TIMEOUT_TIME)
+	}, TIMEOUT_TIME);
+}
+var handler_jazzy_0y  = function(){
+	loadMessage("We appreciate your taste in subtlety.");
+	setTimeout(function() {
+		handler_future();
+	}, TIMEOUT_TIME);
+};
+var handler_jazzy_0n  = function(){
+	terrain_velocity = 0.005;
+	terrain_height = 90;
+	terrain_width = 0.0025;
+
+	loadMessage(dialogEngine.sendMessage());
+};
+var handler_jazzy_1y  = function(){
+	loadMessage("We appreciate your sense of moderation.");
+	setTimeout(function() {
+		handler_future();
+	}, TIMEOUT_TIME);
+};
+var handler_jazzy_1n  = function(){
+	terrain_velocity = 0.007;
+	terrain_height = 150;
+	terrain_width = 0.0030;
+	loadMessage("We appreciate your desire to aim big.");
+	setTimeout(function() {
+		handler_future();
+	}, TIMEOUT_TIME);
+};
+var handler_future = function() {
+	loadMessage("It's finally time to explore the future...");
+	setTimeout(function() {
+		loadMessage("But we're going to need your help.");
+		setTimeout(function() {
+			loadMessage("We're going to start with this ball.");
+			setTimeout(function() {
+				loadMessage(dialogEngine.sendMessage());
+			}, TIMEOUT_TIME);
+		}, TIMEOUT_TIME);
+	}, TIMEOUT_TIME);
+}
+var handler_ball_y = function() {
+	loadMessage("You have excellent taste.");
+	setTimeout(function() {
+		loadMessage("Let's give it some life.")
+		handler_life();
+	});
+}
+var handler_ball_n = function() {
+	loadMessage("Alright, here's a new one.");
+	setTimeout(function() {
+		loadMessage("What do you mean, it's the same one?");
+			setTimeout(function() {
+				loadMessage("It's at least half a micrometer bigger.");
+				setTimeout(function() {
+					loadMessage("Let's give it some life.");
+					handler_life();
+				});
+			}, TIMEOUT_TIME);
+	}, TIMEOUT_TIME);
+}
+var handler_life = function() {
+
+}
+var handler_color_y = function() {
+
+}
+var handler_color_n = function() {
+	
 }

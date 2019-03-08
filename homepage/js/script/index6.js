@@ -42,9 +42,9 @@ function init() {
 	scene.add(cubeMesh);
 	box = cubeMesh;
 
-	//set up lights
-	// var ambientLight = new THREE.AmbientLight( 0xe3e3e3 );
-	// scene.add( ambientLight );
+	// set up lights
+	var ambientLight = new THREE.AmbientLight( 0x888888 );
+	scene.add( ambientLight );
 
 	var pointLight = new THREE.PointLight( 0xe3e3e3, 1.0, 0, 3.0 );
 	pointLight.position.set( 0, 0, 0 );
@@ -70,6 +70,40 @@ function init() {
 		handlers: [handler_lines, handler_dots],
 		children: [null, null]
 	});
+	dialogEngine.addState({
+		message: "Is this spicy enough?",
+		handlers: [handler_jazzy_0y, handler_jazzy_0n],
+		children: [null, {
+			message: "What about now?",
+			handlers: [handler_jazzy_1y, handler_jazzy_1n],
+			children:[null, null]
+		}]
+	});
+	dialogEngine.addState({
+		message: "Are you happy with this ball?",
+		handlers: [handler_ball_y, handler_ball_n],
+		children: [null, null]
+	});
+	dialogEngine.addState({
+		message: "Would you like to change things more?",
+		handlers: [handler_change_y, handler_change_n],
+		children: [null, null]
+	});
+	dialogEngine.addState({
+		message: "Do you like warm colors?",
+		handlers: [handler_color_y, handler_color_n],
+		children: [null, null]
+	});
+	dialogEngine.addState({
+		message: "Do you think this looks good?",
+		handlers: [handler_cube, handler_sphere],
+		children: [null, null]
+	});
+	dialogEngine.addState({
+		message: "Would you like to add more?",
+		handlers: [handler_cube, handler_sphere],
+		children: [null, null]
+	});
 
 	let message1 = dialogEngine.sendMessage();
 	loadMessage(message1);
@@ -92,22 +126,38 @@ function init() {
 	orbit.enableZoom = false;
 	camera.lookAt(0, 100, 10);
 }
+var terrain_velocity = 0; //0.1
+var terrain_height = 0; //70
+var terrain_location = 0;
+var terrain_width = 0.002;
 function updateTerrain() {
 	if(terrainEnabled) {
+		terrain_location += terrain_velocity;
 		var terrainVertices = terrain.terrainObj.geometry.vertices;
 		var terrainColors = terrain.terrainObj.geometry.colors;
+		var terrainFaces = terrain.terrainObj.geometry.faces;
 		for(var i=0; i<terrainVertices.length; i++) {
 			let myVertex = terrainVertices[i];
-			myVertex.y = TERRAIN_BASELINE+noise.simplex3(myVertex.x/500, myVertex.z/500, clock.getElapsedTime()/10)*70;
+			myVertex.y = TERRAIN_BASELINE+noise.simplex3(myVertex.x*terrain_width, myVertex.z*terrain_width, terrain_location)*terrain_height;
 
 			if(terrainType == "dots") {
 				let myColor = terrainColors[i];
 				myHSL = terrain.colorMap.getColor(myVertex.y/70);
 				myColor.setHSL(myHSL.h, myHSL.s, myHSL.l);
+				terrain.terrainObj.geometry.colorsNeedUpdate=true;
 			}
 		}
+		// way too slow - borderline impossible to run.
+		// should be possible with a custom shader
+
+		// if(terrainType == "lines") {
+		// 	for(var i=0; i<terrainFaces.length; i++) {
+		// 		terrainFaces[i].color.offsetHSL(0.001, 0, 0);
+		// 	}
+		// 	terrain.terrainObj.geometry.elementsNeedUpdate=true;
+		// }
 		terrain.terrainObj.geometry.verticesNeedUpdate=true;
-		terrain.terrainObj.geometry.colorsNeedUpdate=true;
+		
 	}
 }
 function renderScene() {
