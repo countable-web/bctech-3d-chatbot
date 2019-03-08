@@ -337,9 +337,27 @@ var handler_ball_n = function() {
 var handler_life = function() {
 
 }
+var handler_change_y = function() {
+
+}
+var handler_change_n = function() {
+	
+}
 var handler_color_y = function() {
 
 }
 var handler_color_n = function() {
+	
+}
+var handler_anim_y = function() {
+
+}
+var handler_anim_n = function() {
+	
+}
+var handler_add_y = function() {
+
+}
+var handler_add_n = function() {
 	
 }
