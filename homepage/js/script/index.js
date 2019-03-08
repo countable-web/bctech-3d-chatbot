@@ -33,7 +33,7 @@ function init() {
 	changeCamera('first');
 
 	scene = new THREE.Scene();
-	scene.fog = new THREE.FogExp2(0x080811, 0.0015);
+	scene.fog = new THREE.Fog(0x080811, 500, 10000);
 	scene.add(camera);
 	
 
@@ -148,27 +148,27 @@ function init() {
 
 	// create fabrics
 	// for(let i=0; i<40; i++) {
-	// 	let myfabric = new Fabric({
-	// 		x:-500+Math.random()*1000, 
-	// 		y:-500+Math.random()*1000, 
-	// 		z:-500+Math.random()*1000}, 10, 10);
+	// 	let myfabric = new PolyCurtain({
+	// 		x:-1000+Math.random()*2000, 
+	// 		y:-1000+Math.random()*2000, 
+	// 		z:-1000+Math.random()*2000}, 10, 10);
 	// 	myfabric.init();
 	// 	entities.push(myfabric);
 	// }
 
-	let total = 5;
-	for(let i=0; i<total; i++) {
-		let angleOffset = Math.random()*Math.PI/(3*total);
-		let myTheta = (i/total+angleOffset)*Math.PI*2;
-		let mycurtain = new PolyCurtain({
-			x:Math.cos(myTheta) * 500, 
-			y:0, 
-			z:Math.sin(myTheta) * 500}, 90, 10);
+	// let total = 5;
+	// for(let i=0; i<total; i++) {
+	// 	let angleOffset = Math.random()*Math.PI/(3*total);
+	// 	let myTheta = (i/total+angleOffset)*Math.PI*2;
+	// 	let mycurtain = new PolyCurtain({
+	// 		x:Math.cos(myTheta) * 1000, 
+	// 		y:0, 
+	// 		z:Math.sin(myTheta) * 1000}, 90, 10);
 
-		mycurtain.init();
-		mycurtain.entityObj.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI/2)
-		entities.push(mycurtain);
-	}
+	// 	mycurtain.init();
+	// 	mycurtain.entityObj.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI/2)
+	// 	entities.push(mycurtain);
+	// }
 
 
 	//render
