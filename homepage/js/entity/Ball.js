@@ -20,18 +20,19 @@ function Ball(origin) {
 		noiseVelocity: 0.1,
 		colorVelocity:0.0,
 	};
+	this.noiseStart = {x:Math.random()*1000, y:Math.random()*1000, z:Math.random()*1000};
 	this.colorProgress = Math.random()*10;
 	this.animated = false;
 	this.lifetime = 0;
 	this.noiseFn = function(x, y, z) {
 		return noise.simplex3(
-			this.params.noiseSpread*x,
-			this.params.noiseSpread*y,
-			this.lifetime*this.params.noiseSpread*this.params.noiseVelocity)
+			this.noiseStart.x+this.params.noiseSpread*x,
+			this.noiseStart.y+this.params.noiseSpread*y,
+			this.noiseStart.z+this.lifetime*this.params.noiseSpread*this.params.noiseVelocity)
 		+noise.simplex3(
-			this.params.noiseSpread*x,
-			this.lifetime*this.params.noiseSpread*this.params.noiseVelocity,
-			this.params.noiseSpread*z);
+			this.noiseStart.x+this.params.noiseSpread*x,
+			this.noiseStart.y+this.lifetime*this.params.noiseSpread*this.params.noiseVelocity,
+			this.noiseStart.z+this.params.noiseSpread*z);
 		// noise.simplex3(
 		// 	this.params.noiseSpread*x,
 		// 	this.lifetime*this.params.noiseSpread*0.01,

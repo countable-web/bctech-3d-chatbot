@@ -310,14 +310,7 @@ var handler_future = function() {
 		setTimeout(function() {
 			loadMessage("We're going to start with this ball.");
 			setTimeout(function() {
-				// var ballGeometry = new THREE.SphereGeometry(10, 10, 10);
-				// var ballMaterial = new THREE.MeshBasicMaterial();
-				// var ballObj = new THREE.Mesh(ballGeometry, ballMaterial);
-				// ballObj.position.z = -200;
-				// scene.add(ballObj);
-				let myColor = new THREE.Color();
-				myColor.setHSL(0, 0.9, 0.8);
-				myBall = new Ball({x:0, y:-200, z:-300}, myColor);
+				myBall = new Ball({x:0, y:-200, z:-300});
 				myBall.init();
 				entities.push(myBall);
 
@@ -378,23 +371,57 @@ var handler_color_y = function() {
 		handler_fill_sky();
 	},TIMEOUT_TIME);
 }
+var newmap = null;
 var handler_color_n = function() {
 	loadMessage("Hopefully this suits your style.");
-	myBall.colorMap = new ColorMap({h:.519, s:0.9, l:0.8}, {h:.783, s: 0.9, l:0.8});
+	newmap = new ColorMap({h:.519, s:0.9, l:0.8}, {h:.783, s: 0.9, l:0.8});
+	myBall.colorMap = newmap;
 	myBall.params.colorVelocity = 0.01;
 	setTimeout(function() {
 		handler_fill_sky();
 	},TIMEOUT_TIME);
 }
-var handler_anim_y = function() {
-
+var addBalls = function(number) {
+	for(let i=0; i<number; i++) {
+		// oy = 700+Math.random()*1000;
+		oy = 300+Math.random()*600;
+		ox = -2000+Math.random()*4000;
+		oz = -2000+Math.random()*4000;
+		var newBall = new Ball({x:ox, y:oy, z:oz});
+		if(newmap!= null) {
+			newBall.colorMap = newmap;
+		}
+		newBall.init();
+		newBall.params = myBall.params;
+		newBall.animated = true;
+		entities.push(newBall);
+	}
 }
-var handler_anim_n = function() {
-	
+var handler_fill_sky = function() {
+	// myBall.origin.y = 
+	loadMessage("It's time to fill the world\nwith your creation!");
+	addBalls(25);
+	myBall.origin.x = -1000+Math.random()*2000;
+	myBall.origin.z = -1000+Math.random()*2000;
+	myBall.origin.y = 300+Math.random()*600;
+	setTimeout(function() {
+		loadMessage(dialogEngine.sendMessage());
+	},TIMEOUT_TIME);
 }
 var handler_add_y = function() {
-
+	loadMessage("Go big or go home!")
+	addBalls(25);
+	setTimeout(function() {
+		handler_finish();
+	},TIMEOUT_TIME);
 }
 var handler_add_n = function() {
-		
+	loadMessage("Always good to show restraint.");
+	setTimeout(function() {
+		handler_finish();
+	},TIMEOUT_TIME);
+	
+}
+var handler_finish = function() {
+	loadMessage("Try shaking your head!\nYou can explore as long as you want.\nTalk to one of us to \nlearn more about Countable.")
 }
