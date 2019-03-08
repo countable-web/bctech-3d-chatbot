@@ -85,8 +85,8 @@ function init() {
 		children: [null, null]
 	});
 	dialogEngine.addState({
-		message: "Would you like to change things more?",
-		handlers: [handler_change_y, handler_change_n],
+		message: "Do you think it's alive enough?",
+		handlers: [handler_alive_y, handler_alive_n],
 		children: [null, null]
 	});
 	dialogEngine.addState({
@@ -95,22 +95,13 @@ function init() {
 		children: [null, null]
 	});
 	dialogEngine.addState({
-		message: "Do you think this looks good?",
-		handlers: [handler_cube, handler_sphere],
-		children: [null, null]
-	});
-	dialogEngine.addState({
 		message: "Would you like to add more?",
-		handlers: [handler_cube, handler_sphere],
+		handlers: [handler_add_y, handler_add_n],
 		children: [null, null]
 	});
 
 	let message1 = dialogEngine.sendMessage();
 	loadMessage(message1);
-	
-
-	
-
 
 	//render
 	renderer = new THREE.WebGLRenderer();
@@ -162,13 +153,12 @@ function updateTerrain() {
 }
 function renderScene() {
 
-	//update entities
-	// for(let i=0; i<entities.length; i++) {
-	// 	if(entities[i].alive) {
-	// 		entities[i].loop();
-	// 	}
-	// }
-
+	// update entities
+	for(let i=0; i<entities.length; i++) {
+		if(entities[i].alive) {
+			entities[i].loop();
+		}
+	}
 	updateTerrain()
 
 	stats.update();

@@ -1,4 +1,4 @@
-const TIMEOUT_TIME = 1000;
+const TIMEOUT_TIME = 100;
 
 
 var dialogEngine = (function() {
@@ -302,6 +302,7 @@ var handler_jazzy_1n  = function(){
 		handler_future();
 	}, TIMEOUT_TIME);
 };
+var myBall;
 var handler_future = function() {
 	loadMessage("It's finally time to explore the future...");
 	setTimeout(function() {
@@ -309,6 +310,17 @@ var handler_future = function() {
 		setTimeout(function() {
 			loadMessage("We're going to start with this ball.");
 			setTimeout(function() {
+				// var ballGeometry = new THREE.SphereGeometry(10, 10, 10);
+				// var ballMaterial = new THREE.MeshBasicMaterial();
+				// var ballObj = new THREE.Mesh(ballGeometry, ballMaterial);
+				// ballObj.position.z = -200;
+				// scene.add(ballObj);
+				let myColor = new THREE.Color();
+				myColor.setHSL(0, 0.9, 0.8);
+				myBall = new Ball({x:0, y:-200, z:-300}, myColor);
+				myBall.init();
+				entities.push(myBall);
+
 				loadMessage(dialogEngine.sendMessage());
 			}, TIMEOUT_TIME);
 		}, TIMEOUT_TIME);
@@ -318,8 +330,10 @@ var handler_ball_y = function() {
 	loadMessage("You have excellent taste.");
 	setTimeout(function() {
 		loadMessage("Let's give it some life.")
-		handler_life();
-	});
+		setTimeout(function() {
+			handler_life();
+		}, TIMEOUT_TIME);
+	},TIMEOUT_TIME);
 }
 var handler_ball_n = function() {
 	loadMessage("Alright, here's a new one.");
@@ -329,25 +343,48 @@ var handler_ball_n = function() {
 				loadMessage("It's at least half a micrometer bigger.");
 				setTimeout(function() {
 					loadMessage("Let's give it some life.");
-					handler_life();
-				});
+					setTimeout(function() {
+						handler_life();
+					}, TIMEOUT_TIME);
+				}, TIMEOUT_TIME);
 			}, TIMEOUT_TIME);
 	}, TIMEOUT_TIME);
 }
 var handler_life = function() {
-
+	myBall.animated = true;
+	loadMessage(dialogEngine.sendMessage());
 }
-var handler_change_y = function() {
-
+var handler_alive_y = function() {
+	loadMessage("Always one for subtlety.");
+	setTimeout(function() {
+		handler_alive_finish();
+	}, TIMEOUT_TIME)
 }
-var handler_change_n = function() {
-	
+var handler_alive_n = function() {
+	loadMessage("You sure love some spirit!");
+	myBall.params.noiseVelocity=0.5;
+	myBall.params.noiseSize=0.25;
+	setTimeout(function() {
+		handler_alive_finish();
+	}, TIMEOUT_TIME)
+}
+var handler_alive_finish = function() {
+	loadMessage(dialogEngine.sendMessage());
 }
 var handler_color_y = function() {
-
+	loadMessage("Well, that's awfully convenient!");
+	myBall.params.colorVelocity = 0.01;
+	setTimeout(function() {
+		handler_fill_sky();
+	},TIMEOUT_TIME);
 }
 var handler_color_n = function() {
-	
+	loadMessage("Hopefully this suits your style.");
+	myBall.colorMap = new ColorMap({h:.519, s:0.9, l:0.8}, {h:.783, s: 0.9, l:0.8});
+	myBall.params.colorVelocity = 0.01;
+	setTimeout(function() {
+		handler_fill_sky();
+	},TIMEOUT_TIME);
 }
 var handler_anim_y = function() {
 
@@ -359,5 +396,5 @@ var handler_add_y = function() {
 
 }
 var handler_add_n = function() {
-	
+		
 }
