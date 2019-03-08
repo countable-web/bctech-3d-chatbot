@@ -58,9 +58,10 @@ function init() {
 
 
 	// create fabrics
-	let myEntity = new PolyCurtain({x:0, y:0, z:0}, 20, 10);
+	let myEntity = new Ball({x:0, y:0, z:0}, new THREE.Color(1, 0, 0));
 	myEntity.init();
 	entities.push(myEntity);
+	myEntity.animated = true;
 	
 
 	// let width = 10;
