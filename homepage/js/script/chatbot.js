@@ -62,18 +62,18 @@ function loadMessage(newMessage) {
 			font: font,
 			size: 80,
 			height: 5,
-			curveSegments: 12,
-			bevelEnabled: true,
-			bevelThickness: 10,
-			bevelSize: 8,
-			bevelSegments: 5
+			curveSegments: 5,
+			// bevelEnabled: true,
+			// bevelThickness: 10,
+			// bevelSize: 8,
+			// bevelSegments: 2
 		} );
 		var messageMaterial = new THREE.MeshPhongMaterial({color:0xff0000});
+		messageMaterial.fog = false;
 		var messageMesh = new THREE.Mesh(messageGeometry,messageMaterial);
 
 		messageGeometry.computeBoundingBox();
 		var messageBox = messageGeometry.boundingBox;
-		console.log(messageBox);
 		messageMesh.translateX(-0.5*(messageBox.max.x-messageBox.min.x));
 		messageMesh.position.z = -900;
 		scene.add(messageMesh);
@@ -135,14 +135,16 @@ var handler_toobad = function() {
 var handler_dotslines = function() {
 	setTimeout(function() {
 		loadMessage(dialogEngine.sendMessage());
-	}, 3000);	
+	}, 1000);	
 }
 var handler_lines = function() {
 	loadMessage("Perfect.");
+	terrainType = "lines";
 	handler_terrain();
 }
 var handler_dots = function() {
 	loadMessage("Maybe dots are more your style.");
+	terrainType = "dots";
 	handler_terrain();
 }
 var showTerrain = function() {
@@ -150,9 +152,93 @@ var showTerrain = function() {
 }
 var handler_terrain = function() {
 	setTimeout(function() {
-		loadMessage("It's time to break down some boundaries.");
+		loadMessage("It's time to break down\nsome boundaries.");
 		setTimeout(function() {
-			showTerrain();
-		}, 3000);
-	}, 3000);	
+			makeTerrain();
+			destroyBox();
+		}, 1000);
+	}, 1000);	
+}
+var box;
+var destroyBox = function() {
+	scene.remove(box);
+	box.geometry.dispose();
+	box.material.dispose();
+}
+
+
+var terrainEnabled = false;
+terrainType = "";
+var makeTerrain = function() {
+	let terrainGeometry = new THREE.Geometry();
+
+	const tx = 100; const tz = 100; const tspace = 40;
+	const twidth = tx * tspace; const tdepth = tz * tspace;
+	const tleft = -twidth/2; const ttop = -tdepth/2;
+	let t_indices = [];
+	let t_index = 0;
+	for(let i=0; i<tx; i++) {
+		let index_row = [];
+		for(let j=0; j<tz; j++) {
+			var vertex = new THREE.Vector3();
+			vertex.x = tleft + tspace * i;
+			vertex.z = ttop + tspace * j;
+			vertex.y = TERRAIN_BASELINE;
+			terrainGeometry.vertices.push(vertex);
+
+			if(terrainType=="dots") {
+				let mycolor = new THREE.Color();
+				terrainGeometry.colors.push(mycolor);
+			}
+
+			index_row.push(t_index);
+			t_index++;
+		}
+		t_indices.push(index_row);
+	}
+	//create faces
+	if(terrainType == "lines") {
+		for(let i=0; i<tx-1; i++) {
+			for(let j=0; j<tz-1; j++) {
+				terrainGeometry.faces.push(new THREE.Face3(
+					t_indices[i+1][j+1], 
+					t_indices[i+1][j], 
+					t_indices[i][j], null, new THREE.Color(1, 1, 1)));
+				terrainGeometry.faces.push(new THREE.Face3(
+					t_indices[i][j+1], 
+					t_indices[i+1][j+1], 
+					t_indices[i][j]));
+			}
+		}
+	}
+
+	if(terrainType == "lines") {
+		let terrainWireframeMaterial = new THREE.MeshBasicMaterial();
+		terrainWireframeMaterial.wireframe = true;
+		terrainWireframeMaterial.color = new THREE.Color(0xc3c3c3)
+
+		let terrainMaterial = new THREE.MeshPhongMaterial();
+		terrainMaterial.flatShading = true;
+		terrainMaterials = [terrainMaterial, terrainWireframeMaterial];
+		let terrainObj = createMultiMaterialObject(terrainGeometry, terrainMaterials);
+		terrain.terrainObj = terrainObj.children[0];
+		terrainGeometry.computeVertexNormals();
+		terrainGeometry.normalsNeedUpdate = true;
+		scene.add(terrainObj);
+	} else if(terrainType == "dots") {
+		var terrainDotsMaterial = new THREE.PointsMaterial({
+			size: 20,
+			sizeAttenuation: true,
+			map: particleSprite,
+			alphaTest: 0.5,
+			transparent: true,
+			vertexColors: THREE.VertexColors
+		});
+		let terrainObj = new THREE.Points(terrainGeometry, terrainDotsMaterial);
+		terrain.terrainObj = terrainObj;
+		scene.add(terrainObj);
+	}
+
+	terrainEnabled = true;
+	updateTerrain();
 }
