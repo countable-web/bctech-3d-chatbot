@@ -1,4 +1,4 @@
-const TIMEOUT_TIME = 100;
+const TIMEOUT_TIME = 3000;
 
 
 var dialogEngine = (function() {
