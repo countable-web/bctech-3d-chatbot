@@ -8,12 +8,12 @@ function Ball(origin) {
 	this.particles = [];
 	this.alive = true;
 	this.radius = 50;
-	// this.params = {
-	// 	noiseSpread: 0.015,
-	// 	noiseSize: 0.25,
-	// 	noiseVelocity: 0.5,
-	// 	colorVelocity:0.005,
-	// };
+	this.delParams = {
+		noiseSpread: 0.00,
+		noiseSize: 0.00,
+		noiseVelocity: 0.00,
+		colorVelocity:0.00,
+	};
 	this.params = {
 		noiseSpread: 0.015,
 		noiseSize: 0.15,
@@ -26,13 +26,13 @@ function Ball(origin) {
 	this.lifetime = 0;
 	this.noiseFn = function(x, y, z) {
 		return noise.simplex3(
-			this.noiseStart.x+this.params.noiseSpread*x,
-			this.noiseStart.y+this.params.noiseSpread*y,
-			this.noiseStart.z+this.lifetime*this.params.noiseSpread*this.params.noiseVelocity)
+			this.noiseStart.x+(this.delParams.noiseSpread+this.params.noiseSpread)*x,
+			this.noiseStart.y+(this.delParams.noiseSpread+this.params.noiseSpread)*y,
+			this.noiseStart.z+this.lifetime*(this.delParams.noiseSpread+this.params.noiseSpread)*(this.params.noiseVelocity+this.delParams.noiseVelocity))
 		+noise.simplex3(
-			this.noiseStart.x+this.params.noiseSpread*x,
-			this.noiseStart.y+this.lifetime*this.params.noiseSpread*this.params.noiseVelocity,
-			this.noiseStart.z+this.params.noiseSpread*z);
+			this.noiseStart.x+(this.delParams.noiseSpread+this.params.noiseSpread)*x,
+			this.noiseStart.y+this.lifetime*(this.delParams.noiseSpread+this.params.noiseSpread)*(this.params.noiseVelocity+this.delParams.noiseVelocity),
+			this.noiseStart.z+(this.delParams.noiseSpread+this.params.noiseSpread)*z);
 		// noise.simplex3(
 		// 	this.params.noiseSpread*x,
 		// 	this.lifetime*this.params.noiseSpread*0.01,
@@ -70,7 +70,7 @@ function Ball(origin) {
 			thisVertex = this.entityObj.geometry.vertices[i];
 			let noiseVal = this.noiseFn(thisVertex.x, thisVertex.y, thisVertex.z);
 			//use this noise value as a factor (relative to 1)
-			let factor = 1 + noiseVal*this.params.noiseSize;
+			let factor = 1 + noiseVal*(this.params.noiseSize+this.delParams.noiseSize);
 			//multiply every vertex by the factor
 			thisVertex.x = this.original_vertices[i].x * factor;
 			thisVertex.y = this.original_vertices[i].y * factor;
@@ -88,11 +88,24 @@ function Ball(origin) {
 		if(!this.animated) return;
 		this.lifetime++;
 		// if(this.lifetime % 2 == 0) return;
-		this.colorProgress+=this.params.colorVelocity;
+		this.colorProgress+=this.params.colorVelocity+this.delParams.colorVelocity;
 		this.updateColor();
 
 		this.entityObj.material.color.offsetHSL(this.params.colorVelocity, 0, 0);
 		this.updateNoise();
+
+		if(this.jiggling) {
+			this.delParams.noiseSpread*=0.95;
+			this.delParams.noiseSize*=0.95;
+			this.delParams.noiseVelocity*=0.95;
+			this.delParams.colorVelocity*=0.95;
+			if(this.delParams.noiseSpread < epsilon &&
+			   this.delParams.noiseSize < epsilon &&
+			   this.delParams.noiseVelocity < epsilon &&
+			   this.delParams.colorVelocity < epsilon) {
+				this.jiggling = false;
+			}	
+		}
 		
 
 		this.entityObj.position.x = this.origin.x;
@@ -102,5 +115,16 @@ function Ball(origin) {
 	this.kill = function(){
 		scene.remove(this.entityObj);
 		this.alive = false;
+	}
+	const epsilon = 0.001;
+	this.jiggling = false;
+	this.jiggle = function() {
+		this.jiggling = true;
+		this.delParams = {
+			noiseSpread: 0.00,
+			noiseSize: 0.5,
+			noiseVelocity: 1.0,
+			colorVelocity:0.3,
+		}
 	}
 }
