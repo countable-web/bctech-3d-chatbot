@@ -424,6 +424,8 @@ var handler_add_n = function() {
 }
 var handler_finish = function() {
 	loadMessage("Try shaking your head!\nYou can explore as long as you want.\nTalk to one of us to \nlearn more about Countable.")
+	yes = jiggle_all;
+	no = jiggle_all;
 }
 var jiggle_all = function() {
 	for(let i=0; i<entities.length; i++) {
