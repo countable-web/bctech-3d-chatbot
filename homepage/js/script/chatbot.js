@@ -467,7 +467,7 @@ var handler_spicy = function() {
 	}, TIMEOUT_TIME);
 }
 var handler_spicy_0y  = function(){
-	loadMessage("We appreciate your taste in subtlety.", true);
+	loadMessage("We appreciate your\ntaste in subtlety!", true);
 	setTimeout(function() {
 		handler_future();
 	}, TIMEOUT_TIME);
@@ -492,7 +492,7 @@ var handler_spicy_0n  = function(){
 	loadMessage(dialogEngine.sendMessage());
 };
 var handler_spicy_1y  = function(){
-	loadMessage("We appreciate your sense of moderation.", true);
+	loadMessage("We appreciate your\nsense of moderation!", true);
 	setTimeout(function() {
 		handler_future();
 	}, TIMEOUT_TIME);
@@ -521,18 +521,18 @@ var handler_spicy_1n  = function(){
 	// terrain_velocity = 0.005;
 	// terrain_height = 90;
 	// terrain_width = 0.0025;
-	loadMessage("We appreciate your desire to aim big.", true);
+	loadMessage("We appreciate your\ndesire to aim big!", true);
 	setTimeout(function() {
 		handler_future();
 	}, TIMEOUT_TIME);
 };
 var myBall;
 var handler_future = function() {
-	loadMessage("It's finally time to explore the future...", true);
+	loadMessage("It's finally time to\nexplore the future...", true);
 	setTimeout(function() {
-		loadMessage("But we're going to need your help.", true);
+		loadMessage("But we're going to\nneed your help.", true);
 		setTimeout(function() {
-			loadMessage("We're going to start with this ball.", true);
+			loadMessage("We're going to start\nwith this ball.", true);
 			setTimeout(function() {
 				myBall = new Ball({x:0, y:-200, z:-300});
 				myBall.init();
@@ -656,7 +656,7 @@ var addBalls = function(number) {
 }
 var handler_fill_sky = function() {
 	// myBall.origin.y = 
-	loadMessage("It's time to fill the world\nwith your creation...", true);
+	loadMessage("It's time to fill the world\nwith our creation...", true);
 	addBalls(25);
 	// myBall.origin.x = -1000+Math.random()*2000;
 	// myBall.origin.z = -1000+Math.random()*2000;
