@@ -57,3 +57,43 @@ var createMultiMaterialObject = function ( geometry, materials ) {
 	}
 	return group;
 }
+function requestFullscreen() {
+  var el = renderer.domElement;
+
+  if (!isMobile()) {
+    effect.setFullScreen(true);
+    return;
+  }
+
+  if (el.requestFullscreen) {
+    el.requestFullscreen();
+  } else if (el.mozRequestFullScreen) {
+    el.mozRequestFullScreen();
+  } else if (el.webkitRequestFullscreen) {
+    el.webkitRequestFullscreen();
+  }
+}
+
+
+function onFullscreenChange(e) {
+  var fsElement = document.fullscreenElement ||
+    document.mozFullScreenElement ||
+    document.webkitFullscreenElement;
+
+  if (!fsElement) {
+    vrMode = false;
+  } else {
+    // lock screen if mobile
+    window.screen.orientation.lock('landscape');
+  }
+}
+
+document.querySelector('#enterVr').addEventListener('click', function () {
+  if (!is_mobile) {
+    alert('You do not have a WebVR capable device. Consider getting a Google Cardboard.')
+    return;
+  }
+  vrMode = vrMode ? false : true;
+  requestFullscreen();
+  onWindowResize();
+});

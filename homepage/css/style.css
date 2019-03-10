@@ -23,3 +23,14 @@ div#WebGL-output {
 	top:0;
 	z-index:5;
 }
+#enterVr img {
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:5;
+	width:100px;
+	background:rgba(0, 0, 0, 0.3);
+	border-radius:10px;
+	padding:0 10px;
+	margin:5px;
+}
