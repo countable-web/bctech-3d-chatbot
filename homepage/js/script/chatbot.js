@@ -331,11 +331,24 @@ var handler_terrain = function() {
 }
 var planes = [];
 var destroyBox = function() {
-	for(var i=0; i<planes.length; i++) {
-		scene.remove(planes[i]);
-		planes[i].geometry.dispose();
-		planes[i].material.dispose();
-	}
+	animators.push({
+		execute:function() {
+			for(var i=0; i<planes.length; i++) {
+				planes[i].translateZ(-50);
+			}
+		},
+		isComplete:function() {
+			return planes[0].position.z > 10000;
+		},
+		complete: function() {
+			for(var i=0; i<planes.length; i++) {
+				scene.remove(planes[i]);
+				planes[i].geometry.dispose();
+				planes[i].material.dispose();
+			}
+			console.log("complete!");
+		}
+	})
 }
 
 
