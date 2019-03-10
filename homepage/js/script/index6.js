@@ -343,22 +343,22 @@ function cameraControls() {
 		noCount = 0;
 		return;
 	}
-	if(Math.abs(camera_a.y)>0.01) {
+	if(Math.abs(camera_a.y)>0.007) {
 		noCount++;
 	} else {
 		if(noCount > 0) noCount--;
 	}
-	if(noCount>10) {
+	if(noCount>8) {
 		no();
 		noCount = 0;
 	}
 
-	if(Math.abs(camera_a.x)>0.01) {
+	if(Math.abs(camera_a.x)>0.007) {
 		yesCount++;
 	} else {
 		if(yesCount > 0) yesCount--;
 	}
-	if(yesCount>10) {
+	if(yesCount>8) {
 		yes();
 		yesCount = 0;
 	}
@@ -450,4 +450,4 @@ function onResize() {
 window.addEventListener('resize', onResize, false);
 
 init();
-console.log("pushed");
+console.log("pushed1");
