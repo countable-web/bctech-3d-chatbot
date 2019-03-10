@@ -253,11 +253,11 @@ function init() {
 		handlers: [handler_color_y, handler_color_n],
 		children: [null, null]
 	});
-	dialogEngine.addState({
-		message: "Would you like to add more?",
-		handlers: [handler_add_y, handler_add_n],
-		children: [null, null]
-	});
+	// dialogEngine.addState({
+	// 	message: "Would you like to add more?",
+	// 	handlers: [handler_add_y, handler_add_n],
+	// 	children: [null, null]
+	// });
 	dialogEngine.addState({
 		message: "Try shaking or nodding\nyour head now!",
 		handlers: [handler_jiggle, handler_jiggle],
@@ -315,6 +315,8 @@ function updateTerrain() {
 let noCount = 0;
 let yesCount = 0;
 let sinceLastAction = 0;
+let camera_hlimit = 0.8;
+let camera_vlimit = 0.6;
 function cameraControls() {
 	if(sinceLastAction < 120) return;
 	var camera_oldv = {
@@ -338,8 +340,8 @@ function cameraControls() {
 		z: camera.rotation.z
 	}
 
-	if(!(camera_r.y < 0.8 && camera_r.y > -0.8
-	&&  camera_r.x < 0.6 && camera_r.y > -0.6)) {
+	if(!(camera_r.y < camera_hlimit && camera_r.y > -camera_hlimit
+	&&  camera_r.x < camera_vlimit && camera_r.y > -camera_vlimit)) {
 		yesCount = 0;
 		noCount = 0;
 		return;

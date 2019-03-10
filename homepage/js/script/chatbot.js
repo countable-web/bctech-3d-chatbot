@@ -670,7 +670,7 @@ var handler_fill_sky = function() {
 	},TIMEOUT_TIME);
 }
 var handler_add_y = function() {
-	loadMessage("Go big or go home!",true)
+	loadMessage("Go big or go home!", true)
 	addBalls(15);
 	setTimeout(function() {
 		handler_finish();
@@ -688,6 +688,8 @@ var handler_jiggle = function(){
 	yes = jiggle_all;
 	no = yes;
 	loadMessage("You can explore as long as you want!",true);
+	camera_hlimit = 10;
+	camera_vlimit = 10;
 	setTimeout(function() {
 		loadMessage("Thank you for coming\nalong for the journey!")
 		setTimeout(function() {
