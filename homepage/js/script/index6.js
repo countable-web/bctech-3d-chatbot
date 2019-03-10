@@ -16,7 +16,7 @@ var isMobile = function () {
 };
 
 var is_mobile = isMobile();
-is_mobile = true;
+// is_mobile = true;
 
 var entities = [];
 var frames = [];
@@ -198,4 +198,4 @@ function renderScene() {
 // window.addEventListener('resize', onResize, false);
 
 init();
-console.log("pushed1!");
+console.log("pushed!");
