@@ -291,6 +291,27 @@ function cameraControls() {
 		yesCount = 0;
 	}
 }
+var lifecycle = 0;
+function updateEllipsis() {
+	if(messageObj && messageObj.children.length>1) {
+		if(lifecycle % 60 == 0) {
+			var num = ((lifecycle - (lifecycle % 60))/60) % 3;
+			if(num == 0) {
+				messageObj.children[1].visible = true;
+				messageObj.children[2].visible = false;
+				messageObj.children[3].visible = false;
+			}else if(num==1) {
+				messageObj.children[1].visible = true;
+				messageObj.children[2].visible = true;
+				messageObj.children[3].visible = false;
+			}else if(num==2) {
+				messageObj.children[1].visible = true;
+				messageObj.children[2].visible = true;
+				messageObj.children[3].visible = true;
+			}
+		}
+	}
+}
 function renderScene() {
 	requestAnimationFrame(renderScene);
 
@@ -303,7 +324,7 @@ function renderScene() {
 		}
 	}
 	updateTerrain()
-	
+	updateEllipsis()
 
 	if (vrMode) {
 		effect.render(scene, camera);
@@ -315,6 +336,7 @@ function renderScene() {
 	} else {
 		dragcontrols.update();
 	}
+	lifecycle++;
 }
 function onResize() {
 	camera.aspect = window.innerWidth / window.innerHeight;
