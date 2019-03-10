@@ -727,7 +727,7 @@ var handler_shake = function() {
 		setTimeout(function() {
 			loadMessage("Let's practice that with\nanother question.", true);
 			setTimeout(function() {
-				loadMessage(dialogEngine.sendMessage(), true);
+				loadMessage(dialogEngine.sendMessage());
 			},TIMEOUT_TIME);
 		},TIMEOUT_TIME);	
 	},TIMEOUT_TIME);

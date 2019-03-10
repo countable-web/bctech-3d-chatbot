@@ -337,6 +337,12 @@ function cameraControls() {
 	}
 
 	//known issue: angles are more sensitive when looking upward
+	if(!(camera_r.y < 0.8 && camera_r.y > -0.8
+	&&  camera_r.x < 0.6 && camera_r.y > -0.6)) {
+		yesCount = 0;
+		noCount = 0;
+		return;
+	}
 	if(Math.abs(camera_a.y)>0.01) {
 		noCount++;
 	} else {
