@@ -85,7 +85,7 @@ function loadMessage(newMessage, talking) {
 
 		var messageGeometry = new THREE.TextGeometry(newMessage, {
 			font: font,
-			size: 60,
+			size: 50,
 			height: 5,
 			curveSegments: 5,
 		} );
@@ -193,7 +193,7 @@ var handler_countable = function() {
 			delGiftObj = -1;
 			delGiftObjV = -2;
 			setTimeout(function() {
-				loadMessage("We are Countable.\nWe build tomorrow's internet, today.", true);
+				loadMessage("We're Countable.\nWe build tomorrow's\ninternet, today.", true);
 				setTimeout(function() {
 					loadMessage(dialogEngine.sendMessage());
 				}, TIMEOUT_TIME);
@@ -202,7 +202,7 @@ var handler_countable = function() {
 }
 var giftObj;
 var handler_glad = function() {
-	loadMessage("Awesome. We're glad to hear that.", true);
+	loadMessage("Awesome.\nWe're glad to hear that.", true);
 	var smileyShape = new THREE.Shape();
 	smileyShape.moveTo( 80, 40 );
 	smileyShape.absarc( 40, 40, 40, 0, Math.PI * 2, false );
@@ -235,7 +235,7 @@ var handler_glad = function() {
 	giftObj = mesh;
 
 	setTimeout(function() {
-		loadMessage("In fact, we designed this smiley\nspecifically for you.", true);
+		loadMessage("In fact, we designed this\nsmiley just for you.", true);
 		setTimeout(function() {
 			loadMessage("It's Countable-colored!", true);
 			setTimeout(function() {
@@ -284,7 +284,7 @@ var handler_heart = function() {
 	giftObj = mesh;
 
 	setTimeout(function() {
-		loadMessage("It's not red, because we made it\nespecially for you.", true);
+		loadMessage("It's not red, because we\nmade it just for you.", true);
 		setTimeout(function() {
 			loadMessage("It's Countable-colored!", true);
 			setTimeout(function() {
@@ -711,7 +711,7 @@ var handler_empty = function() {
 var handler_nod = function() {
 	loadMessage("Cool!", true);
 	setTimeout(function() {
-		loadMessage("You can respond to questions\nby nodding or shaking your head.", true);
+		loadMessage("You can respond to\nquestions by nodding\nor shaking your head.", true);
 		setTimeout(function() {
 			loadMessage("But if you see '...' then\nit means I'm still talking.", true);
 			setTimeout(function() {

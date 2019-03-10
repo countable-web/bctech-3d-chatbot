@@ -91,7 +91,7 @@ function init() {
 	for(var i=0; i<planes.length; i++) {
 		for(var j=0; j<planes[i].geometry.faces.length; j++) {
 			var myColor = new THREE.Color();
-			myColor.setHSL(.58, 0.7+Math.random()*0.3, 0.3+Math.random()*0.7);
+			myColor.setHSL(.522222222, 0.59+(-0.2+Math.random()*0.4), 0.59+(-0.2+Math.random()*0.4));
 			planes[i].geometry.faces[j].color = myColor;
 		}
 	}
@@ -139,7 +139,7 @@ function init() {
 			height: 5,
 			curveSegments: 5,
 		} );
-		var messageRightObj = new THREE.Mesh(messageRightGeometry,messageMaterial);
+		var messageRightObj = new THREE.Mesh(messageRightGeometry, messageMaterial);
 
 		messageRightGeometry.computeBoundingBox();
 		var messageBox = messageRightGeometry.boundingBox;
@@ -344,24 +344,24 @@ function cameraControls() {
 		noCount = 0;
 		return;
 	}
-	if(Math.abs(camera_a.y)>0.004) {
+	if(Math.abs(camera_v.y)>0.04) {
 		noCount++;
 	} else {
 		if(noCount > 0) noCount--;
 	}
-	if(noCount>20) {
+	if(noCount>6) {
 		no();
 		noCount = 0;
 		sinceLastAction = 0;
 	}
 
-	if(Math.abs(camera_a.x)>0.004) {
+	if(Math.abs(camera_v.x)>0.04) {
 		yesCount++;
 	} else {
 		if(yesCount > 0) yesCount--;
 	}
-	// console.log(yesCount);
-	if(yesCount>20) {
+	console.log(yesCount, noCount);
+	if(yesCount>6) {
 		yes();
 		yesCount = 0;
 		sinceLastAction = 0;
