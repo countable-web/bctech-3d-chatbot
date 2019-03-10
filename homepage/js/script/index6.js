@@ -3,6 +3,11 @@ var vrMode, effect;
 
 var orientationcontrols = null, dragcontrols;
 
+var camera_r;
+var camera_v = {x:0, y:0, z:0};
+var camera_a = {x:0, y:0, z:0};
+//horizontal turning is y, vertical turning is x
+
 const TERRAIN_BASELINE = -500;
 
 var isMobile = function () {
@@ -43,6 +48,7 @@ function init() {
 	// scene.fog = new THREE.Fog(0x080811, 300, 2100);
 	scene.fog = new THREE.Fog(0x080811, 500, 2500);
 	scene.add(camera);
+	camera_r = camera.rotation;
 	
 
 	//create box
@@ -167,8 +173,51 @@ function updateTerrain() {
 		
 	}
 }
+let noCount = 0;
+let yesCount = 0;
+function cameraControls() {
+	var camera_oldv = {
+		x:camera_v.x,
+		y:camera_v.y,
+		z:camera_v.z
+	};
+	camera_v = {
+		x:camera.rotation.x-camera_r.x,
+		y:camera.rotation.y-camera_r.y,
+		z:camera.rotation.z-camera_r.z
+	};
+	camera_a = { 
+		x:camera_v.x - camera_oldv.x,
+		y:camera_v.y - camera_oldv.y,
+		z:camera_v.z - camera_oldv.z
+	};
+	camera_r = {
+		x: camera.rotation.x,
+		y: camera.rotation.y,
+		z: camera.rotation.z
+	}
+
+	if(Math.abs(camera_a.y)>0.01) {
+		noCount++;
+	} else {
+		if(noCount > 0) noCount--;
+	}
+	if(noCount>10) {
+		no();
+	}
+	if(Math.abs(camera_a.x)>0.01) {
+		yesCount++;
+	} else {
+		if(yesCount > 0) yesCount--;
+	}
+	if(yesCount>10) {
+		yes();
+	}
+}
 function renderScene() {
 	requestAnimationFrame(renderScene);
+
+	cameraControls();
 
 	// update entities
 	for(let i=0; i<entities.length; i++) {
