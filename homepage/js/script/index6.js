@@ -49,7 +49,7 @@ function init() {
 	camera.lookAt(0, 100, -100)
 
 	scene = new THREE.Scene();
-	scene.fog = new THREE.Fog(0xeff1e6, 500, 2500);
+	scene.fog = new THREE.Fog(0xeff1e6, 1200, 1900);
 	scene.add(camera);
 	camera_r = camera.rotation;
 	
@@ -360,7 +360,7 @@ function cameraControls() {
 	} else {
 		if(yesCount > 0) yesCount--;
 	}
-	console.log(yesCount, noCount);
+	// console.log(yesCount, noCount);
 	if(yesCount>6) {
 		yes();
 		yesCount = 0;
