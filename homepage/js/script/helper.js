@@ -1,15 +1,4 @@
-var mouse = {x:0, y:0};
-function onResize() {
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
-	renderer.setSize(window.innerWidth, window.innerHeight);
-}
-window.addEventListener('resize', onResize, false);
-function onMouseMove( event ) {
-	mouse.x = event.clientX - window.innerWidth / 2;
-	mouse.y = event.clientY - window.innerHeight / 2;
-}
-window.addEventListener('mousemove', onMouseMove, false);
+
 
 function initStats() {
 	var statcontroller = new Stats();
