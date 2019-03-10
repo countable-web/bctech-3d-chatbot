@@ -348,7 +348,7 @@ function cameraControls() {
 	} else {
 		if(noCount > 0) noCount--;
 	}
-	if(noCount>8) {
+	if(noCount>20) {
 		no();
 		noCount = 0;
 	}
@@ -358,7 +358,8 @@ function cameraControls() {
 	} else {
 		if(yesCount > 0) yesCount--;
 	}
-	if(yesCount>8) {
+	console.log(yesCount);
+	if(yesCount>20) {
 		yes();
 		yesCount = 0;
 	}
@@ -450,4 +451,4 @@ function onResize() {
 window.addEventListener('resize', onResize, false);
 
 init();
-console.log("pushed");
+console.log("pushed!");

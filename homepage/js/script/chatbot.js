@@ -360,7 +360,7 @@ var makeTerrain = function() {
 	if(terrainType=="lines") {
 		tx = 100; tz = 100; tspace = 40;
 	} else if(terrainType=="dots") {
-		tx = 200; tz = 200; tspace = 20;
+		tx = 100; tz = 100; tspace = 40;
 	}
 	const twidth = tx * tspace; const tdepth = tz * tspace;
 	const tleft = -twidth/2; const ttop = -tdepth/2;
@@ -685,8 +685,10 @@ var handler_add_n = function() {
 }
 var handler_jiggle = function(){
 	jiggle_all();
-	yes = jiggle_all;
-	no = jiggle_all;
+	yes = function() {
+		if(dialogEngine.canRespond()) jiggle_all();
+	}
+	no = yes;
 	loadMessage("You can explore as long as you want!",true);
 	setTimeout(function() {
 		loadMessage("Thank you for coming\nalong for the journey!")
