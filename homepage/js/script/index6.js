@@ -81,7 +81,15 @@ function init() {
 	effect = new THREE.VREffect(renderer, function (m) {
     //alert(m);
   	});
+  	if (is_mobile) {
+		orientationcontrols = new THREE.DeviceOrientationControls(camera);
+	} else {
+	//
+	}
 	// renderer.setClearColor (0x888888, 1);
+
+	dragcontrols = new THREE.MouseControls(camera);
+  	dragcontrols.orientation.y = 5.3; //+ Math.PI;
 
 	//finish
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
@@ -135,9 +143,6 @@ function init() {
 	let message1 = dialogEngine.sendMessage();
 	loadMessage(message1);
 
-	dragcontrols = new THREE.MouseControls(camera);
-  	dragcontrols.orientation.y = 5.3; //+ Math.PI;
-  	
 	renderScene();
 
 
@@ -210,3 +215,4 @@ function renderScene() {
 // window.addEventListener('resize', onResize, false);
 
 init();
+console.log("pushed!");
