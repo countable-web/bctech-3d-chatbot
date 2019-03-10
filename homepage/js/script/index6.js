@@ -197,7 +197,7 @@ function cameraControls() {
 		z: camera.rotation.z
 	}
 
-	if(Math.abs(camera_a.y)>0.01) {
+	if(Math.abs(camera_a.y)>0.005) {
 		noCount++;
 	} else {
 		if(noCount > 0) noCount--;
@@ -205,7 +205,7 @@ function cameraControls() {
 	if(noCount>10) {
 		no();
 	}
-	if(Math.abs(camera_a.x)>0.01) {
+	if(Math.abs(camera_a.x)>0.005) {
 		yesCount++;
 	} else {
 		if(yesCount > 0) yesCount--;
