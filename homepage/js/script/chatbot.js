@@ -443,7 +443,7 @@ function jiggle_terrain() {
 
 var handler_spicy = function() {
 	setTimeout(function() {
-		loadMessage('This is kind of boring...');
+		loadMessage('This is kind of boring...',true);
 		setTimeout(function() {
 			loadMessage("Let's spice things up.", true);
 			setTimeout(function() {
@@ -685,9 +685,7 @@ var handler_add_n = function() {
 }
 var handler_jiggle = function(){
 	jiggle_all();
-	yes = function() {
-		if(dialogEngine.canRespond()) jiggle_all();
-	}
+	yes = jiggle_all;
 	no = yes;
 	loadMessage("You can explore as long as you want!",true);
 	setTimeout(function() {

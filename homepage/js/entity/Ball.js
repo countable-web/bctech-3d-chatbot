@@ -92,14 +92,13 @@ function Ball(origin) {
 	this.increasing = false;
 	this.loop = function(){
 		if(this.increasing) {
-			console.log("increasing");
 			this.scale+=0.05;
 			this.entityObj.scale.set(this.scale, this.scale, this.scale);
 			if(this.scale > 1) {
 				this.increasing = false;
 			}
 		}
-		
+
 		if(!this.animated) return;
 		this.lifetime++;
 		// if(this.lifetime % 2 == 0) return;

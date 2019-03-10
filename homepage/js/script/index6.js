@@ -314,7 +314,9 @@ function updateTerrain() {
 }
 let noCount = 0;
 let yesCount = 0;
+let sinceLastAction = 0;
 function cameraControls() {
+	if(sinceLastAction < 120) return;
 	var camera_oldv = {
 		x:camera_v.x,
 		y:camera_v.y,
@@ -336,7 +338,6 @@ function cameraControls() {
 		z: camera.rotation.z
 	}
 
-	//known issue: angles are more sensitive when looking upward
 	if(!(camera_r.y < 0.8 && camera_r.y > -0.8
 	&&  camera_r.x < 0.6 && camera_r.y > -0.6)) {
 		yesCount = 0;
@@ -351,6 +352,7 @@ function cameraControls() {
 	if(noCount>20) {
 		no();
 		noCount = 0;
+		sinceLastAction = 0;
 	}
 
 	if(Math.abs(camera_a.x)>0.004) {
@@ -358,10 +360,11 @@ function cameraControls() {
 	} else {
 		if(yesCount > 0) yesCount--;
 	}
-	console.log(yesCount);
+	// console.log(yesCount);
 	if(yesCount>20) {
 		yes();
 		yesCount = 0;
+		sinceLastAction = 0;
 	}
 }
 var lifecycle = 0;
@@ -431,6 +434,9 @@ function renderScene() {
 	updateTerrain()
 	updateEllipsis()
 
+	// lastJiggle++;
+	sinceLastAction++;
+
 	if (vrMode) {
 		effect.render(scene, camera);
 	} else {
@@ -451,4 +457,4 @@ function onResize() {
 window.addEventListener('resize', onResize, false);
 
 init();
-console.log("pushed!");
+console.log("pushed final?");
