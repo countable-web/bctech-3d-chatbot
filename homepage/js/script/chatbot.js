@@ -72,7 +72,7 @@ function loadMessage(newMessage) {
 	loader.load( './js/fonts/questrialfont.json', function ( font ) {
 		var messageGeometry = new THREE.TextGeometry(newMessage, {
 			font: font,
-			size: 80,
+			size: 60,
 			height: 5,
 			curveSegments: 5,
 			// bevelEnabled: true,
@@ -88,6 +88,7 @@ function loadMessage(newMessage) {
 		messageGeometry.computeBoundingBox();
 		var messageBox = messageGeometry.boundingBox;
 		messageMesh.translateX(-0.5*(messageBox.max.x-messageBox.min.x));
+		// messageMesh.translateY(0.5*(messageBox.max.y-messageBox.min.y));
 		messageMesh.position.z = -900;
 		scene.add(messageMesh);
 
@@ -263,7 +264,7 @@ var makeTerrain = function() {
 
 var handler_jazzy = function() {
 	setTimeout(function() {
-		loadMessage('This is kind of lame...');
+		loadMessage('This is kind of boring...');
 		setTimeout(function() {
 			loadMessage("Let's spice things up.");
 			setTimeout(function() {
@@ -432,4 +433,22 @@ var jiggle_all = function() {
 	for(let i=0; i<entities.length; i++) {
 		entities[i].jiggle();
 	}
+}
+var handler_empty = function() {
+
+}
+var handler_nod = function() {
+	loadMessage("Cool!");
+	setTimeout(function() {
+		loadMessage("You can respond to questions\nby nodding or shaking your head.");
+		setTimeout(function() {
+			loadMessage("But if you see '...'\nit means I'm still talking.");
+			setTimeout(function() {
+
+			}, TIMEOUT_TIME);
+		},TIMEOUT_TIME)
+	},TIMEOUT_TIME);
+}
+var handler_shake = function() {
+	
 }

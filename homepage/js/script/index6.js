@@ -45,8 +45,7 @@ function init() {
 	camera.position.z = 0;
 
 	scene = new THREE.Scene();
-	// scene.fog = new THREE.Fog(0x080811, 300, 2100);
-	scene.fog = new THREE.Fog(0x080811, 500, 2500);
+	scene.fog = new THREE.Fog(0x0a0b0b, 500, 2500);
 	scene.add(camera);
 	camera_r = camera.rotation;
 	
@@ -60,16 +59,77 @@ function init() {
 	box = cubeMesh;
 
 	// set up lights
-	var ambientLight = new THREE.AmbientLight( 0x888888 );
+	var ambientLight = new THREE.AmbientLight( 0xaaaaaa );
 	scene.add( ambientLight );
 
-	var pointLight = new THREE.PointLight( 0xe3e3e3, 1.0, 0, 3.0 );
+	var pointLight = new THREE.PointLight( 0xe3e3e3, 0.2, 0, 2.0 );
+	pointLight.position.set( 800, 800, 500 );
+	scene.add( pointLight );
+
+	var pointLight = new THREE.PointLight( 0xb7dee2, 0.4, 0, 3.0 );
 	pointLight.position.set( 0, 0, 0 );
-	scene.add( pointLight );	
+	scene.add( pointLight );
+	// var pointLight = new THREE.PointLight( 0xe3e3e3, 0.5, 0, 3.0 );
+	// pointLight.position.set( 500, 500, 500 );
+	// scene.add( pointLight );
+	// var pointLight = new THREE.PointLight( 0xe3e3e3, 0.5, 0, 3.0 );
+	// pointLight.position.set( 500, 500, 500 );
+	// scene.add( pointLight );
+
+	// set up instruction text
+	loader.load( './js/fonts/questrialfont.json', function ( font ) {
+		var messageMaterial = new THREE.MeshPhongMaterial({color:0x061e29});
+		messageMaterial.fog = false;
+		var messageRightGeometry = new THREE.TextGeometry("(tip: look right!)", {
+			font: font,
+			size: 40,
+			height: 5,
+			curveSegments: 5,
+		} );
+		var messageRightObj = new THREE.Mesh(messageRightGeometry,messageMaterial);
+
+		messageRightGeometry.computeBoundingBox();
+		var messageBox = messageRightGeometry.boundingBox;
+		messageRightObj.rotateOnAxis(new THREE.Vector3(0, 1, 0), Math.PI/2);
+		messageRightObj.position.x = -900;
+		messageRightObj.translateX(-0.5*(messageBox.max.x-messageBox.min.x));
+		scene.add(messageRightObj);
+
+		var messageRightGeometry = new THREE.TextGeometry("(tip: look left!)", {
+			font: font,
+			size: 40,
+			height: 5,
+			curveSegments: 5,
+		} );
+		var messageRightObj = new THREE.Mesh(messageRightGeometry,messageMaterial);
+
+		messageRightGeometry.computeBoundingBox();
+		var messageBox = messageRightGeometry.boundingBox;
+		messageRightObj.rotateOnAxis(new THREE.Vector3(0, 1, 0), -Math.PI/2);
+		messageRightObj.position.x = 900;
+		messageRightObj.translateX(-0.5*(messageBox.max.x-messageBox.min.x));
+		scene.add(messageRightObj);
+
+		var messageRightGeometry = new THREE.TextGeometry("(tip: turn around!)", {
+			font: font,
+			size: 40,
+			height: 5,
+			curveSegments: 5,
+		} );
+		var messageRightObj = new THREE.Mesh(messageRightGeometry,messageMaterial);
+
+		messageRightGeometry.computeBoundingBox();
+		var messageBox = messageRightGeometry.boundingBox;
+		messageRightObj.rotateOnAxis(new THREE.Vector3(0, 1, 0), -Math.PI);
+		messageRightObj.position.z = 900;
+		messageRightObj.translateX(-0.5*(messageBox.max.x-messageBox.min.x));
+		scene.add(messageRightObj);
+
+	} );
 
 	//render
 	renderer = new THREE.WebGLRenderer();
-	renderer.setClearColor (0x080811, 1);
+	renderer.setClearColor (0x0a0b0b, 1);
 	renderer.setPixelRatio(window.devicePixelRatio);
   	renderer.setSize(window.innerWidth, window.innerHeight);
 	effect = new THREE.VREffect(renderer, function (m) {
@@ -88,9 +148,18 @@ function init() {
 	//finish
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
 	// onResize();
-
 	dialogEngine.addState({
-		message:"Hello. Are you enjoying\n BC Tech?",
+		message:"Hello!\nI'm an AI chatbot.\n\nNod your head if you\nunderstand me!",
+		handlers: [handler_nod, handler_empty],
+		children: [null, null]
+	});
+	dialogEngine.addState({
+		message:"Try shaking your head now!",
+		handlers: [handler_empty, handler_shake],
+		children: [null, null]
+	});
+	dialogEngine.addState({
+		message:"Hello. Are you enjoying\nBC Tech?",
 		handlers: [handler_glad, handler_heart],
 		children: [null, null]
 	});
@@ -198,7 +267,7 @@ function cameraControls() {
 	}
 
 	//known issue: angles are more sensitive when looking upward
-	if(Math.abs(camera_a.y)>0.005) {
+	if(Math.abs(camera_a.y)>1.0) {
 		noCount++;
 	} else {
 		if(noCount > 0) noCount--;
@@ -207,7 +276,7 @@ function cameraControls() {
 		no();
 	}
 
-	if(Math.abs(camera_a.x)>0.005) {
+	if(Math.abs(camera_a.x)>1.0) {
 		yesCount++;
 	} else {
 		if(yesCount > 0) yesCount--;
