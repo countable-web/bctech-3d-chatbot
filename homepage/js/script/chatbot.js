@@ -1,4 +1,4 @@
-const TIMEOUT_TIME = 1000;
+const TIMEOUT_TIME = 5000;
 
 
 var dialogEngine = (function() {
@@ -325,7 +325,7 @@ var handler_terrain = function() {
 		setTimeout(function() {
 			makeTerrain();
 			destroyBox();
-			handler_jazzy();
+			handler_spicy();
 		}, TIMEOUT_TIME);
 	}, TIMEOUT_TIME);	
 }
@@ -346,7 +346,6 @@ var destroyBox = function() {
 				planes[i].geometry.dispose();
 				planes[i].material.dispose();
 			}
-			console.log("complete!");
 		}
 	})
 }
@@ -442,43 +441,86 @@ function jiggle_terrain() {
 	terrain.delParams.terrain_velocity = 0.1;
 }
 
-var handler_jazzy = function() {
+var handler_spicy = function() {
 	setTimeout(function() {
 		loadMessage('This is kind of boring...');
 		setTimeout(function() {
 			loadMessage("Let's spice things up.", true);
 			setTimeout(function() {
 				loadMessage(dialogEngine.sendMessage());
-				terrain_velocity = 0.003;
-				terrain_height = 70;
-				terrain_width = 0.002;
+				animators.push({
+					lifetime:0,
+					execute:function() {
+						terrain_velocity+=.00006;
+						terrain_height+=1.4;
+						this.lifetime++;
+					},
+					isComplete:function() {
+						return this.lifetime==50;
+					},
+					complete:function() {
+						
+					}
+				});
 			}, TIMEOUT_TIME)
 		}, TIMEOUT_TIME)
 	}, TIMEOUT_TIME);
 }
-var handler_jazzy_0y  = function(){
+var handler_spicy_0y  = function(){
 	loadMessage("We appreciate your taste in subtlety.", true);
 	setTimeout(function() {
 		handler_future();
 	}, TIMEOUT_TIME);
 };
-var handler_jazzy_0n  = function(){
-	terrain_velocity = 0.005;
-	terrain_height = 90;
-	terrain_width = 0.0025;
+var handler_spicy_0n  = function(){
+	animators.push({
+		lifetime:0,
+		execute:function() {
+			terrain_velocity+=.00004;
+			terrain_height+=0.4;
+			terrain_width+=.00001;
+			this.lifetime++;
+		},
+		isComplete:function() {
+			return this.lifetime==50;
+		},
+		complete:function() {
+			
+		}
+	});
 
 	loadMessage(dialogEngine.sendMessage());
 };
-var handler_jazzy_1y  = function(){
+var handler_spicy_1y  = function(){
 	loadMessage("We appreciate your sense of moderation.", true);
 	setTimeout(function() {
 		handler_future();
 	}, TIMEOUT_TIME);
 };
-var handler_jazzy_1n  = function(){
+var handler_spicy_1n  = function(){
 	terrain_velocity = 0.007;
 	terrain_height = 150;
 	terrain_width = 0.0030;
+
+	animators.push({
+		lifetime:0,
+		execute:function() {
+			terrain_velocity+=.00004;
+			terrain_height+=1.2;
+			terrain_width+=.00001;
+			this.lifetime++;
+		},
+		isComplete:function() {
+			return this.lifetime==50;
+		},
+		complete:function() {
+			
+		}
+	});
+
+	// terrain_velocity = 0.005;
+	// terrain_height = 90;
+	// terrain_width = 0.0025;
 	loadMessage("We appreciate your desire to aim big.", true);
 	setTimeout(function() {
 		handler_future();
@@ -495,6 +537,7 @@ var handler_future = function() {
 				myBall = new Ball({x:0, y:-200, z:-300});
 				myBall.init();
 				entities.push(myBall);
+				myBall.params.noiseSize = 0;
 
 				loadMessage(dialogEngine.sendMessage());
 			}, TIMEOUT_TIME);
@@ -540,6 +583,16 @@ var handler_ball_n = function() {
 }
 var handler_life = function() {
 	myBall.animated = true;
+	animators.push({
+		execute:function() {
+			myBall.params.noiseSize+=0.002;
+		},
+		isComplete:function() {
+			return myBall.params.noiseSize>0.15;
+		},
+		complete:function() {}
+	})
+
 	loadMessage(dialogEngine.sendMessage());
 }
 var handler_alive_y = function() {
@@ -551,7 +604,15 @@ var handler_alive_y = function() {
 var handler_alive_n = function() {
 	loadMessage("You sure love some spirit!", true);
 	myBall.params.noiseVelocity=0.5;
-	myBall.params.noiseSize=0.25;
+	animators.push({
+		execute:function() {
+			myBall.params.noiseSize+=0.002
+		},
+		isComplete:function() {
+			return myBall.params.noiseSize>0.25;
+		},
+		complete:function() {}
+	})
 	setTimeout(function() {
 		handler_alive_finish();
 	}, TIMEOUT_TIME)

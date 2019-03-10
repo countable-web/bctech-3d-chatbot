@@ -44,6 +44,7 @@ function Ball(origin) {
 	// this.colorMap = new ColorMap({h:.519, s:0.9, l:0.8}, {h:.783, s: 0.9, l:0.8});
 
 	this.moving = false;
+	this.scale = 0.1;
 
 	this.init = function() {
 		// make particles
@@ -66,6 +67,8 @@ function Ball(origin) {
 		this.entityObj = entityObj;
 		this.updateColor();
 		scene.add(entityObj);
+		this.entityObj.scale.set(this.scale, this.scale, this.scale);
+		this.increase();
 	}	
 	this.updateNoise = function() {
 		for(i=0; i<this.entityObj.geometry.vertices.length; i++) {
@@ -86,7 +89,17 @@ function Ball(origin) {
 		myColor.setHSL(mapped.h, mapped.s, mapped.l);
 		this.entityObj.material.color = myColor;
 	}
+	this.increasing = false;
 	this.loop = function(){
+		if(this.increasing) {
+			console.log("increasing");
+			this.scale+=0.05;
+			this.entityObj.scale.set(this.scale, this.scale, this.scale);
+			if(this.scale > 1) {
+				this.increasing = false;
+			}
+		}
+		
 		if(!this.animated) return;
 		this.lifetime++;
 		// if(this.lifetime % 2 == 0) return;
@@ -141,5 +154,8 @@ function Ball(origin) {
 			colorVelocity:0.3,
 			positionVelocity:{x:-4+Math.random()*8,y:-4+Math.random()*8,z:-4+Math.random()*8},
 		}
+	}
+	this.increase = function() {
+		this.increasing = true;
 	}
 }

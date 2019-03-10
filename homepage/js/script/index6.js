@@ -89,7 +89,6 @@ function init() {
 	topPlane.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI/2);
 
 	for(var i=0; i<planes.length; i++) {
-		console.log(planes[i].geometry.faces);
 		for(var j=0; j<planes[i].geometry.faces.length; j++) {
 			var myColor = new THREE.Color();
 			myColor.setHSL(.58, 0.7+Math.random()*0.3, 0.3+Math.random()*0.7);
@@ -232,10 +231,10 @@ function init() {
 	});
 	dialogEngine.addState({
 		message: "Is this spicy enough?",
-		handlers: [handler_jazzy_0y, handler_jazzy_0n],
+		handlers: [handler_spicy_0y, handler_spicy_0n],
 		children: [null, {
 			message: "What about now?",
-			handlers: [handler_jazzy_1y, handler_jazzy_1n],
+			handlers: [handler_spicy_1y, handler_spicy_1n],
 			children:[null, null]
 		}]
 	});

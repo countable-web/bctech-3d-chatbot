@@ -58,7 +58,7 @@ function init() {
 
 
 	// create fabrics
-	let myEntity = new Ball({x:0, y:0, z:0}, new THREE.Color(1, 0, 0));
+	let myEntity = new Ball({x:0, y:0, z:0});
 	myEntity.init();
 	entities.push(myEntity);
 	myEntity.animated = true;
@@ -108,7 +108,6 @@ function init() {
 
 	//finish
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
-	onResize();
 	renderScene();
 
 	var orbit = new THREE.OrbitControls( camera, renderer.domElement );
