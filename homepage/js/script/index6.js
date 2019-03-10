@@ -197,6 +197,7 @@ function cameraControls() {
 		z: camera.rotation.z
 	}
 
+	//known issue: angles are more sensitive when looking upward
 	if(Math.abs(camera_a.y)>0.005) {
 		noCount++;
 	} else {
@@ -205,6 +206,7 @@ function cameraControls() {
 	if(noCount>10) {
 		no();
 	}
+
 	if(Math.abs(camera_a.x)>0.005) {
 		yesCount++;
 	} else {

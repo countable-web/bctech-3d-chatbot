@@ -69,7 +69,7 @@ function loadMessage(newMessage) {
 		messageObj.material.dispose();
 	}
 
-	loader.load( './js/fonts/opensansreg.json', function ( font ) {
+	loader.load( './js/fonts/questrialfont.json', function ( font ) {
 		var messageGeometry = new THREE.TextGeometry(newMessage, {
 			font: font,
 			size: 80,
@@ -80,8 +80,9 @@ function loadMessage(newMessage) {
 			// bevelSize: 8,
 			// bevelSegments: 2
 		} );
-		var messageMaterial = new THREE.MeshPhongMaterial({color:0xff0000});
+		var messageMaterial = new THREE.MeshPhongMaterial({color:0x061e29});
 		messageMaterial.fog = false;
+		// messageMaterial.light = false;
 		var messageMesh = new THREE.Mesh(messageGeometry,messageMaterial);
 
 		messageGeometry.computeBoundingBox();
