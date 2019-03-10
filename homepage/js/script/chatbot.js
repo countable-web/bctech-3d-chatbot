@@ -1,4 +1,4 @@
-const TIMEOUT_TIME = 5000;
+const TIMEOUT_TIME = 1000;
 
 
 var dialogEngine = (function() {
@@ -514,7 +514,7 @@ var addBalls = function(number) {
 }
 var handler_fill_sky = function() {
 	// myBall.origin.y = 
-	loadMessage("It's time to fill the world\nwith your creation!", true);
+	loadMessage("It's time to fill the world\nwith your creation...", true);
 	addBalls(25);
 	// myBall.origin.x = -1000+Math.random()*2000;
 	// myBall.origin.z = -1000+Math.random()*2000;
@@ -542,9 +542,18 @@ var handler_add_n = function() {
 	
 }
 var handler_finish = function() {
-	loadMessage("Try shaking your head!\nYou can explore as long as you want.\nTalk to one of us to learn\nmore about Countable.")
+	loadMessage("Try shaking your head!");
 	yes = jiggle_all;
 	no = jiggle_all;
+	setTimeout(function() {
+		loadMessage("You can explore as long as you want!",true);
+		setTimeout(function() {
+			loadMessage("Thank you for coming\nalong for the journey!")
+			setTimeout(function() {
+				loadMessage("Talk to one of us to learn\nmore about Countable.");
+			},TIMEOUT_TIME)
+		},TIMEOUT_TIME)
+	},TIMEOUT_TIME)
 }
 var jiggle_all = function() {
 	for(let i=0; i<entities.length; i++) {
