@@ -1,4 +1,4 @@
-const TIMEOUT_TIME = 3000;
+const TIMEOUT_TIME = 1000;
 
 
 var dialogEngine = (function() {
@@ -7,6 +7,15 @@ var dialogEngine = (function() {
 	var childState = null;
 	var respond_bool = false;
 	return {
+		addIndex: function(amount) {
+			index+=amount;
+		},
+		getIndex: function(amount) {
+			return index;
+		},
+		setRespond: function(response) {
+			respond_bool = response;
+		},
 		canRespond: function() {
 			console.log(index);
 			return respond_bool;
@@ -94,20 +103,28 @@ function loadMessage(newMessage, talking) {
 
 
 		if(talking) {
-			var messageDotsGeometry = new THREE.TextGeometry("...", {
+			var messageDotGeometry = new THREE.TextGeometry(".", {
 				font: font,
 				size: 40,
 				height: 5,
 				curveSegments: 5,
 			} );
-			var messageDotsObj = new THREE.Mesh(messageDotsGeometry,messageMaterial);
-			messageDotsGeometry.computeBoundingBox();
-			var messageDotsBox = messageDotsGeometry.boundingBox;
-			messageDotsObj.position.z = -900;
+			var messageDotObj1 = new THREE.Mesh(messageDotGeometry,messageMaterial);
+			var messageDotObj2 = new THREE.Mesh(messageDotGeometry,messageMaterial);
+			var messageDotObj3 = new THREE.Mesh(messageDotGeometry,messageMaterial);
+			messageDotObj1.position.z = -900;
+			messageDotObj2.position.z = -900;
+			messageDotObj3.position.z = -900;
 			let lineCount = newMessage.split("\n").length;
-			messageDotsObj.translateY(-lineCount*60-30);
-			messageDotsObj.translateX(-0.5*(messageDotsBox.max.x-messageDotsBox.min.x));
-			messageGroup.add(messageDotsObj);
+
+			messageDotObj1.translateY(-lineCount*60-30);
+			messageDotObj2.translateY(-lineCount*60-30);
+			messageDotObj3.translateY(-lineCount*60-30);
+			messageDotObj1.translateX(-20);
+			messageDotObj3.translateX(20);
+			messageGroup.add(messageDotObj1);
+			messageGroup.add(messageDotObj2);
+			messageGroup.add(messageDotObj3);
 		}
 		scene.add(messageGroup);
 		console.log(messageGroup.children);
@@ -132,7 +149,44 @@ var handler_countable = function() {
 }
 var handler_glad = function() {
 	loadMessage("Awesome. We're glad to hear that.", true);
-	handler_countable();
+	var smileyShape = new THREE.Shape();
+	smileyShape.moveTo( 80, 40 );
+	smileyShape.absarc( 40, 40, 40, 0, Math.PI * 2, false );
+	var smileyEye1Path = new THREE.Path();
+	smileyEye1Path.moveTo( 35, 20 );
+	smileyEye1Path.absellipse( 25, 20, 10, 10, 0, Math.PI * 2, true );
+	smileyShape.holes.push( smileyEye1Path );
+	var smileyEye2Path = new THREE.Path();
+	smileyEye2Path.moveTo( 65, 20 );
+	smileyEye2Path.absarc( 55, 20, 10, 0, Math.PI * 2, true );
+	smileyShape.holes.push( smileyEye2Path );
+	var smileyMouthPath = new THREE.Path();
+	smileyMouthPath.moveTo( 20, 40 );
+	smileyMouthPath.quadraticCurveTo( 40, 60, 60, 40 );
+	smileyMouthPath.bezierCurveTo( 70, 45, 70, 50, 60, 60 );
+	smileyMouthPath.quadraticCurveTo( 40, 80, 20, 60 );
+	smileyMouthPath.quadraticCurveTo( 5, 50, 20, 40 );
+	smileyShape.holes.push( smileyMouthPath );
+
+	var extrudeSettings = { depth: 8, bevelEnabled: true, bevelSegments: 20, steps: 2, bevelSize: 5, bevelThickness: 5 };
+
+	var geometry = new THREE.ExtrudeGeometry( smileyShape, extrudeSettings );
+
+	var mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color:0x29b5a3}) );
+	mesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), Math.PI)
+	mesh.position.y = -300;
+	mesh.position.z = -900;
+	scene.add(mesh);
+
+	setTimeout(function() {
+		loadMessage("In fact, we designed this smiley\nspecifically for you.", true);
+		setTimeout(function() {
+			loadMessage("It's Countable-colored!", true);
+			setTimeout(function() {
+				handler_countable();
+			}, TIMEOUT_TIME);
+		}, TIMEOUT_TIME);
+	}, TIMEOUT_TIME);
 }
 var handler_heart = function() {
 	loadMessage("That's unfortunate.\nHave a heart on us.", true);
@@ -150,13 +204,21 @@ var handler_heart = function() {
 
 	var geometry = new THREE.ExtrudeGeometry( heartShape, extrudeSettings );
 
-	var mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color:0xff0000}) );
+	var mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color:0x29b5a3}) );
 	mesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), Math.PI)
 	mesh.position.y = -300;
 	mesh.position.z = -900;
 	scene.add(mesh);
 
-	handler_countable();
+	setTimeout(function() {
+		loadMessage("It's not red, because we made it\nespecially for you.", true);
+		setTimeout(function() {
+			loadMessage("It's Countable-colored!", true);
+			setTimeout(function() {
+				handler_countable();
+			}, TIMEOUT_TIME);
+		}, TIMEOUT_TIME);
+	}, TIMEOUT_TIME);
 }
 var handler_explore = function() {
 	loadMessage("Awesome. Let's begin.", true);
@@ -207,7 +269,12 @@ terrainType = "";
 var makeTerrain = function() {
 	let terrainGeometry = new THREE.Geometry();
 
-	const tx = 100; const tz = 100; const tspace = 40;
+	var tx, tz, tspace;
+	if(terrainType=="lines") {
+		tx = 100; tz = 100; tspace = 40;
+	} else if(terrainType=="dots") {
+		tx = 200; tz = 200; tspace = 20;
+	}
 	const twidth = tx * tspace; const tdepth = tz * tspace;
 	const tleft = -twidth/2; const ttop = -tdepth/2;
 	let t_indices = [];
@@ -236,15 +303,15 @@ var makeTerrain = function() {
 		for(let i=0; i<tx-1; i++) {
 			for(let j=0; j<tz-1; j++) {
 				var face_indices = [t_indices[i][j],t_indices[i+1][j],t_indices[i][j+1],t_indices[i+1][j+1]];
-
+				var myColor = new THREE.Color(0xb7dee2);
 				terrainGeometry.faces.push(new THREE.Face3(
 					face_indices[3], 
 					face_indices[1], 
-					face_indices[0]));
+					face_indices[0], null, myColor));
 				terrainGeometry.faces.push(new THREE.Face3(
 					face_indices[2], 
 					face_indices[3], 
-					face_indices[0]));
+					face_indices[0], null, myColor));
 			}
 		}
 	}
@@ -253,7 +320,7 @@ var makeTerrain = function() {
 	if(terrainType == "lines") {
 		let terrainWireframeMaterial = new THREE.MeshBasicMaterial();
 		terrainWireframeMaterial.wireframe = true;
-		terrainWireframeMaterial.color = new THREE.Color(0xc3c3c3)
+		terrainWireframeMaterial.color = new THREE.Color(0x061e29)
 
 		let terrainMaterial = new THREE.MeshPhongMaterial({vertexColors:THREE.VertexColors});
 		terrainMaterial.flatShading = true;
@@ -343,7 +410,7 @@ var handler_future = function() {
 var handler_ball_y = function() {
 	loadMessage("You have excellent taste.", true);
 	setTimeout(function() {
-		loadMessage("Let's give it some life., true")
+		loadMessage("Let's give it some life.",true);
 		setTimeout(function() {
 			handler_life();
 		}, TIMEOUT_TIME);
@@ -405,9 +472,9 @@ var handler_color_n = function() {
 var addBalls = function(number) {
 	for(let i=0; i<number; i++) {
 		// oy = 700+Math.random()*1000;
-		oy = 300+Math.random()*600;
-		ox = -2000+Math.random()*4000;
-		oz = -2000+Math.random()*4000;
+		oy = Math.random()*600;
+		ox = -1500+Math.random()*3000;
+		oz = -1500+Math.random()*3000;
 		var newBall = new Ball({x:ox, y:oy, z:oz});
 		if(newmap!= null) {
 			newBall.colorMap = newmap;
@@ -422,15 +489,18 @@ var handler_fill_sky = function() {
 	// myBall.origin.y = 
 	loadMessage("It's time to fill the world\nwith your creation!", true);
 	addBalls(25);
-	myBall.origin.x = -1000+Math.random()*2000;
-	myBall.origin.z = -1000+Math.random()*2000;
-	myBall.origin.y = 300+Math.random()*600;
+	// myBall.origin.x = -1000+Math.random()*2000;
+	// myBall.origin.z = -1000+Math.random()*2000;
+	// myBall.origin.y = 300+Math.random()*600;
 	setTimeout(function() {
-		loadMessage(dialogEngine.sendMessage());
+		loadMessage("Take a look around you!", true);
+		setTimeout(function() {
+			loadMessage(dialogEngine.sendMessage());
+		}, TIMEOUT_TIME);
 	},TIMEOUT_TIME);
 }
 var handler_add_y = function() {
-	loadMessage("Go big or go home!, true")
+	loadMessage("Go big or go home!",true)
 	addBalls(25);
 	setTimeout(function() {
 		handler_finish();
@@ -444,7 +514,7 @@ var handler_add_n = function() {
 	
 }
 var handler_finish = function() {
-	loadMessage("Try shaking your head!\nYou can explore as long as you want.\nTalk to one of us to \nlearn more about Countable., true")
+	loadMessage("Try shaking your head!\nYou can explore as long as you want.\nTalk to one of us to learn\nmore about Countable.")
 	yes = jiggle_all;
 	no = jiggle_all;
 }
@@ -454,7 +524,8 @@ var jiggle_all = function() {
 	}
 }
 var handler_empty = function() {
-
+	dialogEngine.addIndex(-1);
+	dialogEngine.setRespond(true);
 }
 var handler_nod = function() {
 	loadMessage("Cool!", true);
@@ -470,4 +541,13 @@ var handler_nod = function() {
 }
 var handler_shake = function() {
 	loadMessage("Great job!", true);
+	setTimeout(function() {
+		loadMessage("Before we get started...", true);
+		setTimeout(function() {
+			loadMessage("Let's practice that with\nanother question.", true);
+			setTimeout(function() {
+				loadMessage(dialogEngine.sendMessage(), true);
+			},TIMEOUT_TIME);
+		},TIMEOUT_TIME);	
+	},TIMEOUT_TIME);
 }

@@ -17,7 +17,7 @@ function Ball(origin) {
 	this.params = {
 		noiseSpread: 0.015,
 		noiseSize: 0.15,
-		noiseVelocity: 0.1,
+		noiseVelocity: 0.25,
 		colorVelocity:0.0,
 	};
 	this.noiseStart = {x:Math.random()*1000, y:Math.random()*1000, z:Math.random()*1000};

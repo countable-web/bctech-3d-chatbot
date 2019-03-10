@@ -46,7 +46,7 @@ function init() {
 	camera.position.z = 0;
 
 	scene = new THREE.Scene();
-	scene.fog = new THREE.Fog(0x0a0b0b, 500, 2500);
+	scene.fog = new THREE.Fog(0xeff1e6, 500, 2500);
 	scene.add(camera);
 	camera_r = camera.rotation;
 	
@@ -67,7 +67,7 @@ function init() {
 	pointLight.position.set( 800, 800, 500 );
 	scene.add( pointLight );
 
-	var pointLight = new THREE.PointLight( 0xb7dee2, 0.4, 0, 3.0 );
+	var pointLight = new THREE.PointLight( 0xeff1e6, 0.4, 0, 3.0 );
 	pointLight.position.set( 0, 0, 0 );
 	scene.add( pointLight );
 	// var pointLight = new THREE.PointLight( 0xe3e3e3, 0.5, 0, 3.0 );
@@ -133,7 +133,7 @@ function init() {
 
 	//render
 	renderer = new THREE.WebGLRenderer();
-	renderer.setClearColor (0x0a0b0b, 1);
+	renderer.setClearColor (0xeff1e6, 1);
 	renderer.setPixelRatio(window.devicePixelRatio);
   	renderer.setSize(window.innerWidth, window.innerHeight);
 	effect = new THREE.VREffect(renderer, function (m) {
@@ -163,7 +163,7 @@ function init() {
 		children: [null, null]
 	});
 	dialogEngine.addState({
-		message:"Hello. Are you enjoying\nBC Tech?",
+		message:"Are you enjoying\nBC Tech?",
 		handlers: [handler_glad, handler_heart],
 		children: [null, null]
 	});
@@ -278,6 +278,7 @@ function cameraControls() {
 	}
 	if(noCount>10) {
 		no();
+		noCount = 0;
 	}
 
 	if(Math.abs(camera_a.x)>1.0) {
@@ -287,6 +288,7 @@ function cameraControls() {
 	}
 	if(yesCount>10) {
 		yes();
+		yesCount = 0;
 	}
 }
 function renderScene() {
