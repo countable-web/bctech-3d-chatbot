@@ -35,6 +35,7 @@ var terrain = {
 };
 
 var particleSprite = new THREE.TextureLoader().load('./images/disk.png');
+var messages = [];
 
 function init() {
 	loader = new THREE.FontLoader();
@@ -95,36 +96,39 @@ function init() {
 		messageRightObj.translateX(-0.5*(messageBox.max.x-messageBox.min.x));
 		scene.add(messageRightObj);
 
-		var messageRightGeometry = new THREE.TextGeometry("(tip: look left!)", {
+		var messageLeftGeometry = new THREE.TextGeometry("(tip: look left!)", {
 			font: font,
 			size: 40,
 			height: 5,
 			curveSegments: 5,
 		} );
-		var messageRightObj = new THREE.Mesh(messageRightGeometry,messageMaterial);
+		var messageLeftObj = new THREE.Mesh(messageLeftGeometry,messageMaterial);
 
-		messageRightGeometry.computeBoundingBox();
-		var messageBox = messageRightGeometry.boundingBox;
-		messageRightObj.rotateOnAxis(new THREE.Vector3(0, 1, 0), -Math.PI/2);
-		messageRightObj.position.x = 900;
-		messageRightObj.translateX(-0.5*(messageBox.max.x-messageBox.min.x));
-		scene.add(messageRightObj);
+		messageLeftGeometry.computeBoundingBox();
+		var messageBox = messageLeftGeometry.boundingBox;
+		messageLeftObj.rotateOnAxis(new THREE.Vector3(0, 1, 0), -Math.PI/2);
+		messageLeftObj.position.x = 900;
+		messageLeftObj.translateX(-0.5*(messageBox.max.x-messageBox.min.x));
+		scene.add(messageLeftObj);
 
-		var messageRightGeometry = new THREE.TextGeometry("(tip: turn around!)", {
+		var messageBackGeometry = new THREE.TextGeometry("(tip: turn around!)", {
 			font: font,
 			size: 40,
 			height: 5,
 			curveSegments: 5,
 		} );
-		var messageRightObj = new THREE.Mesh(messageRightGeometry,messageMaterial);
+		var messageBackObj = new THREE.Mesh(messageBackGeometry,messageMaterial);
 
-		messageRightGeometry.computeBoundingBox();
-		var messageBox = messageRightGeometry.boundingBox;
-		messageRightObj.rotateOnAxis(new THREE.Vector3(0, 1, 0), -Math.PI);
-		messageRightObj.position.z = 900;
-		messageRightObj.translateX(-0.5*(messageBox.max.x-messageBox.min.x));
-		scene.add(messageRightObj);
+		messageBackGeometry.computeBoundingBox();
+		var messageBox = messageBackGeometry.boundingBox;
+		messageBackObj.rotateOnAxis(new THREE.Vector3(0, 1, 0), -Math.PI);
+		messageBackObj.position.z = 900;
+		messageBackObj.translateX(-0.5*(messageBox.max.x-messageBox.min.x));
+		scene.add(messageBackObj);
 
+		messages.push(messageRightObj);
+		messages.push(messageLeftObj);
+		messages.push(messageBackObj);
 	} );
 
 	//render

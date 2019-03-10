@@ -62,38 +62,57 @@ var dialogEngine = (function() {
 var messageObj;
 var newMessageObj;
 
-function loadMessage(newMessage) {
+function loadMessage(newMessage, talking) {
 	if(messageObj) {
 		scene.remove(messageObj);
-		messageObj.geometry.dispose();
-		messageObj.material.dispose();
+		for(i=0; i<messageObj.children.length; i++) {
+			messageObj.children[i].geometry.dispose();
+			messageObj.children[i].material.dispose();
+		}
 	}
 
 	loader.load( './js/fonts/questrialfont.json', function ( font ) {
+		var messageGroup = new THREE.Group();
+
 		var messageGeometry = new THREE.TextGeometry(newMessage, {
 			font: font,
 			size: 60,
 			height: 5,
 			curveSegments: 5,
-			// bevelEnabled: true,
-			// bevelThickness: 10,
-			// bevelSize: 8,
-			// bevelSegments: 2
 		} );
 		var messageMaterial = new THREE.MeshPhongMaterial({color:0x061e29});
 		messageMaterial.fog = false;
-		// messageMaterial.light = false;
 		var messageMesh = new THREE.Mesh(messageGeometry,messageMaterial);
 
 		messageGeometry.computeBoundingBox();
 		var messageBox = messageGeometry.boundingBox;
 		messageMesh.translateX(-0.5*(messageBox.max.x-messageBox.min.x));
-		// messageMesh.translateY(0.5*(messageBox.max.y-messageBox.min.y));
 		messageMesh.position.z = -900;
-		scene.add(messageMesh);
+		messageGroup.add(messageMesh);
 
-		messageObj = messageMesh;
+		messageObj = messageGroup;
+
+
+		if(talking) {
+			var messageDotsGeometry = new THREE.TextGeometry("...", {
+				font: font,
+				size: 40,
+				height: 5,
+				curveSegments: 5,
+			} );
+			var messageDotsObj = new THREE.Mesh(messageDotsGeometry,messageMaterial);
+			messageDotsGeometry.computeBoundingBox();
+			var messageDotsBox = messageDotsGeometry.boundingBox;
+			messageDotsObj.position.z = -900;
+			let lineCount = newMessage.split("\n").length;
+			messageDotsObj.translateY(-lineCount*60-30);
+			messageDotsObj.translateX(-0.5*(messageDotsBox.max.x-messageDotsBox.min.x));
+			messageGroup.add(messageDotsObj);
+		}
+		scene.add(messageGroup);
+		console.log(messageGroup.children);
 	} );
+
 }
 
 function yes() {
@@ -105,18 +124,18 @@ function no() {
 
 var handler_countable = function() {
 	setTimeout(function() {
-		loadMessage("We are Countable.\nWe build tomorrow's internet, today.");
+		loadMessage("We are Countable.\nWe build tomorrow's internet, today.", true);
 		setTimeout(function() {
 			loadMessage(dialogEngine.sendMessage());
 		}, TIMEOUT_TIME);
 	}, TIMEOUT_TIME);
 }
 var handler_glad = function() {
-	loadMessage("Awesome. We're glad to hear that.");
+	loadMessage("Awesome. We're glad to hear that.", true);
 	handler_countable();
 }
 var handler_heart = function() {
-	loadMessage("That's unfortunate.\nHave a heart on us.");
+	loadMessage("That's unfortunate.\nHave a heart on us.", true);
 
 	var heartShape = new THREE.Shape();
 	heartShape.moveTo( 25, 25 );
@@ -140,11 +159,11 @@ var handler_heart = function() {
 	handler_countable();
 }
 var handler_explore = function() {
-	loadMessage("Awesome. Let's begin.");
+	loadMessage("Awesome. Let's begin.", true);
 	handler_dotslines();
 }
 var handler_toobad = function() {
-	loadMessage("Well, that's too bad.\nYou're coming with us, anyway.");
+	loadMessage("Well, that's too bad.\nYou're coming with us, anyway.", true);
 	handler_dotslines();
 }
 var handler_dotslines = function() {
@@ -153,12 +172,12 @@ var handler_dotslines = function() {
 	}, TIMEOUT_TIME);	
 }
 var handler_lines = function() {
-	loadMessage("Perfect.");
+	loadMessage("Perfect.", true);
 	terrainType = "lines";
 	handler_terrain();
 }
 var handler_dots = function() {
-	loadMessage("Maybe dots are more your style.");
+	loadMessage("Maybe dots are more your style.", true);
 	terrainType = "dots";
 	handler_terrain();
 }
@@ -167,7 +186,7 @@ var showTerrain = function() {
 }
 var handler_terrain = function() {
 	setTimeout(function() {
-		loadMessage("Here at Countable,\nwe break boundaries.");
+		loadMessage("Here at Countable,\nwe break boundaries.", true);
 		setTimeout(function() {
 			makeTerrain();
 			destroyBox();
@@ -266,7 +285,7 @@ var handler_jazzy = function() {
 	setTimeout(function() {
 		loadMessage('This is kind of boring...');
 		setTimeout(function() {
-			loadMessage("Let's spice things up.");
+			loadMessage("Let's spice things up.", true);
 			setTimeout(function() {
 				loadMessage(dialogEngine.sendMessage());
 				terrain_velocity = 0.003;
@@ -277,7 +296,7 @@ var handler_jazzy = function() {
 	}, TIMEOUT_TIME);
 }
 var handler_jazzy_0y  = function(){
-	loadMessage("We appreciate your taste in subtlety.");
+	loadMessage("We appreciate your taste in subtlety.", true);
 	setTimeout(function() {
 		handler_future();
 	}, TIMEOUT_TIME);
@@ -290,7 +309,7 @@ var handler_jazzy_0n  = function(){
 	loadMessage(dialogEngine.sendMessage());
 };
 var handler_jazzy_1y  = function(){
-	loadMessage("We appreciate your sense of moderation.");
+	loadMessage("We appreciate your sense of moderation.", true);
 	setTimeout(function() {
 		handler_future();
 	}, TIMEOUT_TIME);
@@ -299,18 +318,18 @@ var handler_jazzy_1n  = function(){
 	terrain_velocity = 0.007;
 	terrain_height = 150;
 	terrain_width = 0.0030;
-	loadMessage("We appreciate your desire to aim big.");
+	loadMessage("We appreciate your desire to aim big.", true);
 	setTimeout(function() {
 		handler_future();
 	}, TIMEOUT_TIME);
 };
 var myBall;
 var handler_future = function() {
-	loadMessage("It's finally time to explore the future...");
+	loadMessage("It's finally time to explore the future...", true);
 	setTimeout(function() {
-		loadMessage("But we're going to need your help.");
+		loadMessage("But we're going to need your help.", true);
 		setTimeout(function() {
-			loadMessage("We're going to start with this ball.");
+			loadMessage("We're going to start with this ball.", true);
 			setTimeout(function() {
 				myBall = new Ball({x:0, y:-200, z:-300});
 				myBall.init();
@@ -322,22 +341,22 @@ var handler_future = function() {
 	}, TIMEOUT_TIME);
 }
 var handler_ball_y = function() {
-	loadMessage("You have excellent taste.");
+	loadMessage("You have excellent taste.", true);
 	setTimeout(function() {
-		loadMessage("Let's give it some life.")
+		loadMessage("Let's give it some life., true")
 		setTimeout(function() {
 			handler_life();
 		}, TIMEOUT_TIME);
 	},TIMEOUT_TIME);
 }
 var handler_ball_n = function() {
-	loadMessage("Alright, here's a new one.");
+	loadMessage("Alright, here's a new one.", true);
 	setTimeout(function() {
-		loadMessage("What do you mean, it's the same one?");
+		loadMessage("What do you mean, it's the same one?", true);
 			setTimeout(function() {
-				loadMessage("It's at least half a micrometer bigger.");
+				loadMessage("It's at least half a micrometer bigger.", true);
 				setTimeout(function() {
-					loadMessage("Let's give it some life.");
+					loadMessage("Let's give it some life.", true);
 					setTimeout(function() {
 						handler_life();
 					}, TIMEOUT_TIME);
@@ -350,13 +369,13 @@ var handler_life = function() {
 	loadMessage(dialogEngine.sendMessage());
 }
 var handler_alive_y = function() {
-	loadMessage("Always one for subtlety.");
+	loadMessage("Always one for subtlety.", true);
 	setTimeout(function() {
 		handler_alive_finish();
 	}, TIMEOUT_TIME)
 }
 var handler_alive_n = function() {
-	loadMessage("You sure love some spirit!");
+	loadMessage("You sure love some spirit!", true);
 	myBall.params.noiseVelocity=0.5;
 	myBall.params.noiseSize=0.25;
 	setTimeout(function() {
@@ -367,7 +386,7 @@ var handler_alive_finish = function() {
 	loadMessage(dialogEngine.sendMessage());
 }
 var handler_color_y = function() {
-	loadMessage("Well, that's awfully convenient!");
+	loadMessage("Well, that's awfully convenient!", true);
 	myBall.params.colorVelocity = 0.01;
 	setTimeout(function() {
 		handler_fill_sky();
@@ -375,7 +394,7 @@ var handler_color_y = function() {
 }
 var newmap = null;
 var handler_color_n = function() {
-	loadMessage("Hopefully this suits your style.");
+	loadMessage("Hopefully this suits your style.", true);
 	newmap = new ColorMap({h:.519, s:0.9, l:0.8}, {h:.783, s: 0.9, l:0.8});
 	myBall.colorMap = newmap;
 	myBall.params.colorVelocity = 0.01;
@@ -401,7 +420,7 @@ var addBalls = function(number) {
 }
 var handler_fill_sky = function() {
 	// myBall.origin.y = 
-	loadMessage("It's time to fill the world\nwith your creation!");
+	loadMessage("It's time to fill the world\nwith your creation!", true);
 	addBalls(25);
 	myBall.origin.x = -1000+Math.random()*2000;
 	myBall.origin.z = -1000+Math.random()*2000;
@@ -411,21 +430,21 @@ var handler_fill_sky = function() {
 	},TIMEOUT_TIME);
 }
 var handler_add_y = function() {
-	loadMessage("Go big or go home!")
+	loadMessage("Go big or go home!, true")
 	addBalls(25);
 	setTimeout(function() {
 		handler_finish();
 	},TIMEOUT_TIME);
 }
 var handler_add_n = function() {
-	loadMessage("Always good to show restraint.");
+	loadMessage("Always good to show restraint.", true);
 	setTimeout(function() {
 		handler_finish();
 	},TIMEOUT_TIME);
 	
 }
 var handler_finish = function() {
-	loadMessage("Try shaking your head!\nYou can explore as long as you want.\nTalk to one of us to \nlearn more about Countable.")
+	loadMessage("Try shaking your head!\nYou can explore as long as you want.\nTalk to one of us to \nlearn more about Countable., true")
 	yes = jiggle_all;
 	no = jiggle_all;
 }
@@ -438,17 +457,17 @@ var handler_empty = function() {
 
 }
 var handler_nod = function() {
-	loadMessage("Cool!");
+	loadMessage("Cool!", true);
 	setTimeout(function() {
-		loadMessage("You can respond to questions\nby nodding or shaking your head.");
+		loadMessage("You can respond to questions\nby nodding or shaking your head.", true);
 		setTimeout(function() {
-			loadMessage("But if you see '...'\nit means I'm still talking.");
+			loadMessage("But if you see '...' then\nit means I'm still talking.", true);
 			setTimeout(function() {
-
+				loadMessage(dialogEngine.sendMessage());
 			}, TIMEOUT_TIME);
 		},TIMEOUT_TIME)
 	},TIMEOUT_TIME);
 }
 var handler_shake = function() {
-	
+	loadMessage("Great job!", true);
 }
