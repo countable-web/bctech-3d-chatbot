@@ -46,6 +46,7 @@ function init() {
 	camera.position.y = 100;
 	camera.position.x = 0;
 	camera.position.z = 0;
+	camera.lookAt(0, 100, -100)
 
 	scene = new THREE.Scene();
 	scene.fog = new THREE.Fog(0xeff1e6, 500, 2500);
@@ -329,12 +330,29 @@ function animate() {
 		delGiftObj += delGiftObjV;
 	}
 }
+function renderOpacity() {
+	for(var i=0; i<animators.length; i++) {
+		animators[i].obj.children.map(
+			(child) => {child.material.opacity+=animators[i].del});
+		if(animators[i].obj.children[0].material.opacity>1) {
+			animators.splice(i, 1);
+		} else if(animators[i].obj.children[0].material.opacity<0) {
+			scene.remove(animators[i].obj);
+			for(j=0; j<animators[i].obj.children.length; j++) {
+				animators[i].obj.children[j].geometry.dispose();
+				animators[i].obj.children[j].material.dispose();
+			}
+		}
+	}
+}
 function renderScene() {
 	requestAnimationFrame(renderScene);
 
 	cameraControls();
 
 	animate();
+
+	renderOpacity();
 
 	// update entities
 	for(let i=0; i<entities.length; i++) {

@@ -73,11 +73,12 @@ var newMessageObj;
 
 function loadMessage(newMessage, talking) {
 	if(messageObj) {
-		scene.remove(messageObj);
-		for(i=0; i<messageObj.children.length; i++) {
-			messageObj.children[i].geometry.dispose();
-			messageObj.children[i].material.dispose();
-		}
+		// scene.remove(messageObj);
+		// for(i=0; i<messageObj.children.length; i++) {
+		// 	messageObj.children[i].geometry.dispose();
+		// 	messageObj.children[i].material.dispose();
+		// }
+		fade(messageObj, "out");
 	}
 
 	loader.load( './js/fonts/questrialfont.json', function ( font ) {
@@ -91,6 +92,8 @@ function loadMessage(newMessage, talking) {
 		} );
 		var messageMaterial = new THREE.MeshPhongMaterial({color:0x061e29});
 		messageMaterial.fog = false;
+		messageMaterial.transparent = true;
+		messageMaterial.opacity = 0;
 		var messageMesh = new THREE.Mesh(messageGeometry,messageMaterial);
 
 		messageGeometry.computeBoundingBox();
@@ -100,6 +103,8 @@ function loadMessage(newMessage, talking) {
 		messageGroup.add(messageMesh);
 
 		messageObj = messageGroup;
+
+		fade(messageObj, "in");
 
 
 		if(talking) {
@@ -129,7 +134,14 @@ function loadMessage(newMessage, talking) {
 		scene.add(messageGroup);
 		console.log(messageGroup.children);
 	} );
-
+}
+var animators = [];
+function fade(fadeobj, fadetype) {
+	animators.push({
+		obj:fadeobj,
+		del:(fadetype == "in") ? 0.05 : -0.05
+	});
+	console.log(animators);
 }
 
 function yes() {
