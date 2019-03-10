@@ -71,7 +71,7 @@ function init() {
 	var planeMaterial = new THREE.MeshPhongMaterial({color:0xe3e3e3});
 	var planeMesh = new THREE.Mesh(planeGeometry,planeMaterial);
 	scene.add(planeMesh);
-	planeMesh.translateZ(-999);
+	planeMesh.translateZ(-950);
 	// color: 0xe3e3e3
 	plane = planeMesh;
 
@@ -220,6 +220,11 @@ function init() {
 	dialogEngine.addState({
 		message: "Would you like to add more?",
 		handlers: [handler_add_y, handler_add_n],
+		children: [null, null]
+	});
+	dialogEngine.addState({
+		message: "Try shaking or nodding\nyour head now!",
+		handlers: [handler_jiggle, handler_jiggle],
 		children: [null, null]
 	});
 

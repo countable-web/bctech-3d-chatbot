@@ -1,4 +1,4 @@
-const TIMEOUT_TIME = 5000;
+const TIMEOUT_TIME = 500;
 
 
 var dialogEngine = (function() {
@@ -17,7 +17,6 @@ var dialogEngine = (function() {
 			respond_bool = response;
 		},
 		canRespond: function() {
-			console.log(index);
 			return respond_bool;
 		},
 		getStates: function() {
@@ -132,7 +131,6 @@ function loadMessage(newMessage, talking) {
 			messageGroup.add(messageDotObj3);
 		}
 		scene.add(messageGroup);
-		console.log(messageGroup.children);
 	} );
 }
 var animators = [];
@@ -141,7 +139,6 @@ function fade(fadeobj, fadetype) {
 		obj:fadeobj,
 		del:(fadetype == "in") ? 0.05 : -0.05
 	});
-	console.log(animators);
 }
 
 function yes() {
@@ -153,7 +150,7 @@ function no() {
 var delGiftObj = 0;
 var delGiftObjV = 0;
 var handler_countable = function() {
-	loadMessage("Enjoy this for a bit longer...", true)
+	loadMessage("Enjoy it for a bit longer...", true)
 		setTimeout(function() {
 			loadMessage("Time to put this away.", true)
 			delGiftObj = -1;
@@ -330,19 +327,21 @@ var makeTerrain = function() {
 		for(let i=0; i<tx-1; i++) {
 			for(let j=0; j<tz-1; j++) {
 				var face_indices = [t_indices[i][j],t_indices[i+1][j],t_indices[i][j+1],t_indices[i+1][j+1]];
-				var myColor = new THREE.Color(0xb7dee2);
+				var myColor1 = new THREE.Color(0xb7dee2);
+				var myColor2 = new THREE.Color(0xb7dee2);
+				myColor1.offsetHSL(-0.05+Math.random()*0.1, -0.1+Math.random()*0.2, -0.4+Math.random()*0.4);
+				myColor2.offsetHSL(-0.05+Math.random()*0.1, -0.1+Math.random()*0.2, -0.4+Math.random()*0.4);
 				terrainGeometry.faces.push(new THREE.Face3(
 					face_indices[3], 
 					face_indices[1], 
-					face_indices[0], null, myColor));
+					face_indices[0], null, myColor1));
 				terrainGeometry.faces.push(new THREE.Face3(
 					face_indices[2], 
 					face_indices[3], 
-					face_indices[0], null, myColor));
+					face_indices[0], null, myColor2));
 			}
 		}
 	}
-	console.log(terrainGeometry.faces);
 
 	if(terrainType == "lines") {
 		let terrainWireframeMaterial = new THREE.MeshBasicMaterial();
@@ -441,10 +440,23 @@ var handler_future = function() {
 var handler_ball_y = function() {
 	loadMessage("You have excellent taste.", true);
 	setTimeout(function() {
-		loadMessage("Let's give it some life.",true);
+		loadMessage("Well, that's it.", true);
 		setTimeout(function() {
-			handler_life();
+			loadMessage("Pack your bags, this is it.", true);
+			setTimeout(function() {
+				loadMessage("This is the future.", true);
+				setTimeout(function() {
+					loadMessage("Just kidding...", true);
+					setTimeout(function() {
+						loadMessage("Let's give it some life.",true);
+						setTimeout(function() {
+							handler_life();
+						}, TIMEOUT_TIME);
+					},TIMEOUT_TIME);
+				},TIMEOUT_TIME);
+			},TIMEOUT_TIME);
 		}, TIMEOUT_TIME);
+		
 	},TIMEOUT_TIME);
 }
 var handler_ball_n = function() {
@@ -546,19 +558,20 @@ var handler_add_n = function() {
 	},TIMEOUT_TIME);
 	
 }
-var handler_finish = function() {
-	loadMessage("Try shaking your head!");
+var handler_jiggle = function(){
+	jiggle_all();
 	yes = jiggle_all;
 	no = jiggle_all;
+	loadMessage("You can explore as long as you want!",true);
 	setTimeout(function() {
-		loadMessage("You can explore as long as you want!",true);
+		loadMessage("Thank you for coming\nalong for the journey!")
 		setTimeout(function() {
-			loadMessage("Thank you for coming\nalong for the journey!")
-			setTimeout(function() {
-				loadMessage("Talk to one of us to learn\nmore about Countable.");
-			},TIMEOUT_TIME)
+			loadMessage("Talk to one of us to learn\nmore about Countable.");
 		},TIMEOUT_TIME)
 	},TIMEOUT_TIME)
+}
+var handler_finish = function() {
+	loadMessage(dialogEngine.sendMessage());
 }
 var jiggle_all = function() {
 	for(let i=0; i<entities.length; i++) {
