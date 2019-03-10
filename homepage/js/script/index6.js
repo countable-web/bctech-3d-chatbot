@@ -1,8 +1,7 @@
-var clock, scene, camera, renderer, controls, stats, particles, loader;
+var scene, camera, renderer, controls, loader;
 var vrMode, effect;
 
-var orientationcontrols = null;
-var dragcontrols;
+var orientationcontrols = null, dragcontrols;
 
 const TERRAIN_BASELINE = -500;
 
@@ -17,6 +16,7 @@ var isMobile = function () {
 };
 
 var is_mobile = isMobile();
+is_mobile = true;
 
 var entities = [];
 var frames = [];
@@ -32,11 +32,6 @@ var terrain = {
 var particleSprite = new THREE.TextureLoader().load('./images/disk.png');
 
 function init() {
-	stats = initStats();
-
-	clock = new THREE.Clock();
-	clock.start();
-
 	loader = new THREE.FontLoader();
 
 	camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 5000);
@@ -64,14 +59,7 @@ function init() {
 
 	var pointLight = new THREE.PointLight( 0xe3e3e3, 1.0, 0, 3.0 );
 	pointLight.position.set( 0, 0, 0 );
-	scene.add( pointLight );
-	
-
-	// var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
-	// directionalLight.position = new THREE.Vector3(500, 500, 500);
-	// scene.add( directionalLight )
-
-	
+	scene.add( pointLight );	
 
 	//render
 	renderer = new THREE.WebGLRenderer();
@@ -79,7 +67,7 @@ function init() {
 	renderer.setPixelRatio(window.devicePixelRatio);
   	renderer.setSize(window.innerWidth, window.innerHeight);
 	effect = new THREE.VREffect(renderer, function (m) {
-    //alert(m);
+
   	});
   	if (is_mobile) {
 		orientationcontrols = new THREE.DeviceOrientationControls(camera);
@@ -144,11 +132,6 @@ function init() {
 	loadMessage(message1);
 
 	renderScene();
-
-
-	// var orbit = new THREE.OrbitControls( camera, renderer.domElement );
-	// orbit.enableZoom = false;
-	// camera.lookAt(0, 100, 10);
 }
 var terrain_velocity = 0; //0.1
 var terrain_height = 0; //70
@@ -185,6 +168,7 @@ function updateTerrain() {
 	}
 }
 function renderScene() {
+	requestAnimationFrame(renderScene);
 
 	// update entities
 	for(let i=0; i<entities.length; i++) {
@@ -193,9 +177,8 @@ function renderScene() {
 		}
 	}
 	updateTerrain()
+	
 
-	stats.update();
-	requestAnimationFrame(renderScene);
 	if (vrMode) {
 		effect.render(scene, camera);
 	} else {
