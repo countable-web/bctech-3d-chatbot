@@ -55,25 +55,62 @@ function init() {
 	
 
 	//create box
-	var cubeGeometry = new THREE.BoxGeometry(2000, 2000, 2000, 10, 10, 10);
-	var cubeMaterial = new THREE.MeshPhongMaterial({vertexColors:THREE.FaceColors});
-	cubeMaterial.side = THREE.BackSide;
-	var cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
-	scene.add(cubeMesh);
-	box = cubeMesh;
-	for(var i=0; i<cubeGeometry.faces.length; i++) {
-		var myColor = new THREE.Color();
-		myColor.setHSL(.58, 0.7+Math.random()*0.3, 0.3+Math.random()*0.7);
-		cubeGeometry.faces[i].color = myColor;
+	var planeGeometry = new THREE.PlaneGeometry(2000, 2000, 10, 10);
+	var planeMaterial = new THREE.MeshPhongMaterial({vertexColors:THREE.FaceColors});
+	// cubeMaterial.side = THREE.BackSide;
+	var backPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+	scene.add(backPlane);
+	planes.push(backPlane);
+	backPlane.translateZ(1000);
+	backPlane.rotateOnAxis(new THREE.Vector3(0, 1, 0), Math.PI);
+
+	var leftPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+	scene.add(leftPlane);
+	planes.push(leftPlane);
+	leftPlane.translateX(-1000);
+	leftPlane.rotateOnAxis(new THREE.Vector3(0, 1, 0), Math.PI/2);
+
+	var rightPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+	scene.add(rightPlane);
+	planes.push(rightPlane);
+	rightPlane.translateX(1000);
+	rightPlane.rotateOnAxis(new THREE.Vector3(0, 1, 0), -Math.PI/2);
+
+	var bottomPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+	scene.add(bottomPlane);
+	planes.push(bottomPlane);
+	bottomPlane.translateY(-1000);
+	bottomPlane.rotateOnAxis(new THREE.Vector3(1, 0, 0), -Math.PI/2);
+
+	var topPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+	scene.add(topPlane);
+	planes.push(topPlane);
+	topPlane.translateY(1000);
+	topPlane.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI/2);
+
+	for(var i=0; i<planes.length; i++) {
+		console.log(planes[i].geometry.faces);
+		for(var j=0; j<planes[i].geometry.faces.length; j++) {
+			var myColor = new THREE.Color();
+			myColor.setHSL(.58, 0.7+Math.random()*0.3, 0.3+Math.random()*0.7);
+			planes[i].geometry.faces[j].color = myColor;
+		}
 	}
 
-	var planeGeometry = new THREE.PlaneGeometry(2000, 2000);
-	var planeMaterial = new THREE.MeshPhongMaterial({color:0xe3e3e3});
-	var planeMesh = new THREE.Mesh(planeGeometry,planeMaterial);
-	scene.add(planeMesh);
-	planeMesh.translateZ(-950);
+
+	// for(var i=0; i<cubeGeometry.faces.length; i++) {
+	// 	var myColor = new THREE.Color();
+	// 	myColor.setHSL(.58, 0.7+Math.random()*0.3, 0.3+Math.random()*0.7);
+	// 	cubeGeometry.faces[i].color = myColor;
+	// }
+
+	var frontGeometry = new THREE.PlaneGeometry(2000, 2000);
+	var frontMaterial = new THREE.MeshPhongMaterial({color:0xe3e3e3});
+	var frontPlane = new THREE.Mesh(frontGeometry,frontMaterial);
+	scene.add(frontPlane);
+	frontPlane.translateZ(-1000);
 	// color: 0xe3e3e3
-	plane = planeMesh;
+	planes.push(frontPlane);
 
 	// set up lights
 	var ambientLight = new THREE.AmbientLight( 0xaaaaaa );
@@ -349,17 +386,24 @@ function animate() {
 	}
 }
 function renderOpacity() {
+	// for(var i=0; i<animators.length; i++) {
+	// 	animators[i].obj.children.map(
+	// 		(child) => {child.material.opacity+=animators[i].del});
+	// 	if(animators[i].obj.children[0].material.opacity>1) {
+	// 		animators.splice(i, 1);
+	// 	} else if(animators[i].obj.children[0].material.opacity<0) {
+	// 		scene.remove(animators[i].obj);
+	// 		for(j=0; j<animators[i].obj.children.length; j++) {
+	// 			animators[i].obj.children[j].geometry.dispose();
+	// 			animators[i].obj.children[j].material.dispose();
+	// 		}
+	// 	}
+	// }
 	for(var i=0; i<animators.length; i++) {
-		animators[i].obj.children.map(
-			(child) => {child.material.opacity+=animators[i].del});
-		if(animators[i].obj.children[0].material.opacity>1) {
+		animators[i].execute();
+		if(animators[i].isComplete()) {
+			animators[i].complete();
 			animators.splice(i, 1);
-		} else if(animators[i].obj.children[0].material.opacity<0) {
-			scene.remove(animators[i].obj);
-			for(j=0; j<animators[i].obj.children.length; j++) {
-				animators[i].obj.children[j].geometry.dispose();
-				animators[i].obj.children[j].material.dispose();
-			}
 		}
 	}
 }

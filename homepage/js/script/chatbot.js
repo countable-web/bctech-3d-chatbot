@@ -1,4 +1,4 @@
-const TIMEOUT_TIME = 5000;
+const TIMEOUT_TIME = 1000;
 
 
 var dialogEngine = (function() {
@@ -135,10 +135,47 @@ function loadMessage(newMessage, talking) {
 }
 var animators = [];
 function fade(fadeobj, fadetype) {
-	animators.push({
-		obj:fadeobj,
-		del:(fadetype == "in") ? 0.05 : -0.05
-	});
+	if(fadetype=="in") {
+		animators.push({
+			obj:fadeobj,
+			execute: function() {
+				this.obj.children.map(
+					(child) => {child.material.opacity+=0.05});
+			},
+			isComplete: function() {
+				if(this.obj.children[0].material.opacity>1) {
+					return true;
+				} else {
+					return false;
+				}
+			},
+			complete:function() {
+				//do nothing
+			}
+		});
+	} else if(fadetype=="out") {
+		animators.push({
+			obj:fadeobj,
+			execute: function() {
+				this.obj.children.map(
+					(child) => {child.material.opacity-=0.05});
+			},
+			isComplete: function() {
+				if(this.obj.children[0].material.opacity<0) {
+					return true;
+				} else {
+					return false;
+				}
+			},
+			complete:function() {
+				scene.remove(this.obj);
+				for(i=0; i<this.obj.children.length; i++) {
+					this.obj.children[i].geometry.dispose();
+					this.obj.children[i].material.dispose();
+				}
+			}
+		});
+	}
 }
 
 function yes() {
@@ -191,7 +228,8 @@ var handler_glad = function() {
 
 	var mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color:0x29b5a3}) );
 	mesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), Math.PI)
-	mesh.position.y = -300;
+	mesh.position.y = -1050;
+	animate_giftobj(mesh);
 	mesh.position.z = -900;
 	scene.add(mesh);
 	giftObj = mesh;
@@ -205,6 +243,21 @@ var handler_glad = function() {
 			}, TIMEOUT_TIME);
 		}, TIMEOUT_TIME);
 	}, TIMEOUT_TIME);
+}
+var animate_giftobj = function(myobj) {
+	animators.push({
+		obj:myobj,
+		execute: function(){
+			this.obj.translateY(-10);
+		},
+		isComplete:function() {
+			return this.obj.position.y>-300;
+		},
+		complete:function() {
+			// delGiftObj = 0;
+		}
+
+	});
 }
 var handler_heart = function() {
 	loadMessage("That's unfortunate.\nHave a heart on us.", true);
@@ -224,7 +277,8 @@ var handler_heart = function() {
 
 	var mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color:0x29b5a3}) );
 	mesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), Math.PI)
-	mesh.position.y = -300;
+	mesh.position.y = -1050;
+	animate_giftobj(mesh);
 	mesh.position.z = -900;
 	scene.add(mesh);
 	giftObj = mesh;
@@ -275,16 +329,13 @@ var handler_terrain = function() {
 		}, TIMEOUT_TIME);
 	}, TIMEOUT_TIME);	
 }
-var box;
-var plane;
+var planes = [];
 var destroyBox = function() {
-	scene.remove(box);
-	box.geometry.dispose();
-	box.material.dispose();
-
-	scene.remove(plane);
-	plane.geometry.dispose();
-	plane.material.dispose();
+	for(var i=0; i<planes.length; i++) {
+		scene.remove(planes[i]);
+		planes[i].geometry.dispose();
+		planes[i].material.dispose();
+	}
 }
 
 
