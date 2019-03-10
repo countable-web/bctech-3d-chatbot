@@ -312,10 +312,18 @@ function updateEllipsis() {
 		}
 	}
 }
+function animate() {
+	if(giftObj) {
+		giftObj.translateY(delGiftObj);
+		delGiftObj += delGiftObjV;
+	}
+}
 function renderScene() {
 	requestAnimationFrame(renderScene);
 
 	cameraControls();
+
+	animate();
 
 	// update entities
 	for(let i=0; i<entities.length; i++) {

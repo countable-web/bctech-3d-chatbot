@@ -1,4 +1,4 @@
-const TIMEOUT_TIME = 1000;
+const TIMEOUT_TIME = 100;
 
 
 var dialogEngine = (function() {
@@ -138,15 +138,23 @@ function yes() {
 function no() {
 	if(dialogEngine.canRespond()) dialogEngine.receiveMessage(1);
 }
-
+var delGiftObj = 0;
+var delGiftObjV = 0;
 var handler_countable = function() {
-	setTimeout(function() {
-		loadMessage("We are Countable.\nWe build tomorrow's internet, today.", true);
+	loadMessage("Enjoy this for a bit longer...", true)
 		setTimeout(function() {
-			loadMessage(dialogEngine.sendMessage());
-		}, TIMEOUT_TIME);
-	}, TIMEOUT_TIME);
+			loadMessage("Time to put this away.", true)
+			delGiftObj = -1;
+			delGiftObjV = -2;
+			setTimeout(function() {
+				loadMessage("We are Countable.\nWe build tomorrow's internet, today.", true);
+				setTimeout(function() {
+					loadMessage(dialogEngine.sendMessage());
+				}, TIMEOUT_TIME);
+			}, TIMEOUT_TIME);
+		},TIMEOUT_TIME);
 }
+var giftObj;
 var handler_glad = function() {
 	loadMessage("Awesome. We're glad to hear that.", true);
 	var smileyShape = new THREE.Shape();
@@ -177,6 +185,7 @@ var handler_glad = function() {
 	mesh.position.y = -300;
 	mesh.position.z = -900;
 	scene.add(mesh);
+	giftObj = mesh;
 
 	setTimeout(function() {
 		loadMessage("In fact, we designed this smiley\nspecifically for you.", true);
@@ -209,6 +218,7 @@ var handler_heart = function() {
 	mesh.position.y = -300;
 	mesh.position.z = -900;
 	scene.add(mesh);
+	giftObj = mesh;
 
 	setTimeout(function() {
 		loadMessage("It's not red, because we made it\nespecially for you.", true);
@@ -482,6 +492,7 @@ var addBalls = function(number) {
 		newBall.init();
 		newBall.params = myBall.params;
 		newBall.animated = true;
+		newBall.moving = true;
 		entities.push(newBall);
 	}
 }
@@ -492,6 +503,7 @@ var handler_fill_sky = function() {
 	// myBall.origin.x = -1000+Math.random()*2000;
 	// myBall.origin.z = -1000+Math.random()*2000;
 	// myBall.origin.y = 300+Math.random()*600;
+	myBall.moving = true;
 	setTimeout(function() {
 		loadMessage("Take a look around you!", true);
 		setTimeout(function() {

@@ -13,6 +13,7 @@ function Ball(origin) {
 		noiseSize: 0.00,
 		noiseVelocity: 0.00,
 		colorVelocity:0.00,
+		positionVelocity:{x:0, y:0, z:0}
 	};
 	this.params = {
 		noiseSpread: 0.015,
@@ -42,6 +43,7 @@ function Ball(origin) {
 	this.colorMap = new ColorMap({h:-0.1362, s:0.9, l:0.8},{h:.0916, s:0.9, l:0.8});
 	// this.colorMap = new ColorMap({h:.519, s:0.9, l:0.8}, {h:.783, s: 0.9, l:0.8});
 
+	this.moving = false;
 
 	this.init = function() {
 		// make particles
@@ -99,14 +101,26 @@ function Ball(origin) {
 			this.delParams.noiseSize*=0.95;
 			this.delParams.noiseVelocity*=0.95;
 			this.delParams.colorVelocity*=0.95;
+			this.delParams.positionVelocity.x*=0.95;
+			this.delParams.positionVelocity.y*=0.95;
+			this.delParams.positionVelocity.z*=0.95;
 			if(this.delParams.noiseSpread < epsilon &&
 			   this.delParams.noiseSize < epsilon &&
 			   this.delParams.noiseVelocity < epsilon &&
-			   this.delParams.colorVelocity < epsilon) {
+			   this.delParams.colorVelocity < epsilon &&
+			   this.delParams.positionVelocity.x < epsilon &&
+			   this.delParams.positionVelocity.y < epsilon &&
+			   this.delParams.positionVelocity.z < epsilon
+			   ) {
 				this.jiggling = false;
 			}	
 		}
 		
+		if(this.moving) {
+			this.origin.x+=this.delParams.positionVelocity.x+this.noiseFn(this.origin.x, this.origin.y, this.origin.z);
+			this.origin.y+=this.delParams.positionVelocity.y+this.noiseFn(100+this.origin.x,100+this.origin.y, 100+this.origin.z);
+			this.origin.z+=this.delParams.positionVelocity.z+this.noiseFn(200+this.origin.x, 200+this.origin.y, 200+this.origin.z);	
+		}
 
 		this.entityObj.position.x = this.origin.x;
 		this.entityObj.position.y = this.origin.y;
@@ -125,6 +139,7 @@ function Ball(origin) {
 			noiseSize: 0.5,
 			noiseVelocity: 1.0,
 			colorVelocity:0.3,
+			positionVelocity:{x:-4+Math.random()*8,y:-4+Math.random()*8,z:-4+Math.random()*8},
 		}
 	}
 }
