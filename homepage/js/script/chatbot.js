@@ -357,6 +357,10 @@ var makeTerrain = function() {
 	terrainEnabled = true;
 	updateTerrain();
 }
+function jiggle_terrain() {
+	terrain.jiggling = true;
+	terrain.delParams.terrain_velocity = 0.1;
+}
 
 var handler_jazzy = function() {
 	setTimeout(function() {
@@ -534,6 +538,7 @@ var jiggle_all = function() {
 	for(let i=0; i<entities.length; i++) {
 		entities[i].jiggle();
 	}
+	jiggle_terrain();
 }
 var handler_empty = function() {
 	dialogEngine.addIndex(-1);

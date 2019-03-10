@@ -32,6 +32,8 @@ var terrain = {
 	colorMap: new ColorMap(
 		{h: 0.83, s:1.0, l:0.7},
 		{h: 0.5, s:1.0, l:0.7}),
+	jiggling:false,
+	delParams: {terrain_velocity:0}
 };
 
 var particleSprite = new THREE.TextureLoader().load('./images/disk.png');
@@ -218,19 +220,28 @@ var terrain_location = 0;
 var terrain_width = 0.002;
 function updateTerrain() {
 	if(terrainEnabled) {
-		terrain_location += terrain_velocity;
+		terrain_location += (terrain_velocity+terrain.delParams.terrain_velocity);
 		var terrainVertices = terrain.terrainObj.geometry.vertices;
 		var terrainColors = terrain.terrainObj.geometry.colors;
 		var terrainFaces = terrain.terrainObj.geometry.faces;
 		for(var i=0; i<terrainVertices.length; i++) {
 			let myVertex = terrainVertices[i];
-			myVertex.y = TERRAIN_BASELINE+noise.simplex3(myVertex.x*terrain_width, myVertex.z*terrain_width, terrain_location)*terrain_height;
+			myVertex.y = TERRAIN_BASELINE+noise.simplex3(
+				myVertex.x*terrain_width, 
+				myVertex.z*terrain_width, 
+				terrain_location)*(terrain_height);
 
 			if(terrainType == "dots") {
 				let myColor = terrainColors[i];
 				myHSL = terrain.colorMap.getColor(myVertex.y/70);
 				myColor.setHSL(myHSL.h, myHSL.s, myHSL.l);
 				terrain.terrainObj.geometry.colorsNeedUpdate=true;
+			}
+		}
+		if(terrain.jiggling) {
+			terrain.delParams.terrain_velocity *= 0.95;
+			if(terrain.delParams.terrain_velocity<0.01) {
+				jiggling = false;
 			}
 		}
 		// way too slow - borderline impossible to run.
