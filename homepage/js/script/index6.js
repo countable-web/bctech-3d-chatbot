@@ -55,12 +55,25 @@ function init() {
 	
 
 	//create box
-	var cubeGeometry = new THREE.BoxGeometry(2000, 2000, 2000);
-	var cubeMaterial = new THREE.MeshPhongMaterial({color: 0xe3e3e3});
+	var cubeGeometry = new THREE.BoxGeometry(2000, 2000, 2000, 10, 10, 10);
+	var cubeMaterial = new THREE.MeshPhongMaterial({vertexColors:THREE.FaceColors});
 	cubeMaterial.side = THREE.BackSide;
 	var cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
 	scene.add(cubeMesh);
 	box = cubeMesh;
+	for(var i=0; i<cubeGeometry.faces.length; i++) {
+		var myColor = new THREE.Color();
+		myColor.setHSL(.58, 0.7+Math.random()*0.3, 0.3+Math.random()*0.7);
+		cubeGeometry.faces[i].color = myColor;
+	}
+
+	var planeGeometry = new THREE.PlaneGeometry(2000, 2000);
+	var planeMaterial = new THREE.MeshPhongMaterial({color:0xe3e3e3});
+	var planeMesh = new THREE.Mesh(planeGeometry,planeMaterial);
+	scene.add(planeMesh);
+	planeMesh.translateZ(-999);
+	// color: 0xe3e3e3
+	plane = planeMesh;
 
 	// set up lights
 	var ambientLight = new THREE.AmbientLight( 0xaaaaaa );
@@ -283,7 +296,7 @@ function cameraControls() {
 	}
 
 	//known issue: angles are more sensitive when looking upward
-	if(Math.abs(camera_a.y)>1.0) {
+	if(Math.abs(camera_a.y)>0.01) {
 		noCount++;
 	} else {
 		if(noCount > 0) noCount--;
@@ -293,7 +306,7 @@ function cameraControls() {
 		noCount = 0;
 	}
 
-	if(Math.abs(camera_a.x)>1.0) {
+	if(Math.abs(camera_a.x)>0.01) {
 		yesCount++;
 	} else {
 		if(yesCount > 0) yesCount--;

@@ -1,4 +1,4 @@
-const TIMEOUT_TIME = 1000;
+const TIMEOUT_TIME = 5000;
 
 
 var dialogEngine = (function() {
@@ -279,10 +279,15 @@ var handler_terrain = function() {
 	}, TIMEOUT_TIME);	
 }
 var box;
+var plane;
 var destroyBox = function() {
 	scene.remove(box);
 	box.geometry.dispose();
 	box.material.dispose();
+
+	scene.remove(plane);
+	plane.geometry.dispose();
+	plane.material.dispose();
 }
 
 
