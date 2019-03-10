@@ -450,4 +450,4 @@ function onResize() {
 window.addEventListener('resize', onResize, false);
 
 init();
-console.log("pushed!");
+console.log("pushed");
