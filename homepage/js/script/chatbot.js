@@ -657,7 +657,7 @@ var addBalls = function(number) {
 var handler_fill_sky = function() {
 	// myBall.origin.y = 
 	loadMessage("It's time to fill the world\nwith our creation...", true);
-	addBalls(25);
+	addBalls(15);
 	// myBall.origin.x = -1000+Math.random()*2000;
 	// myBall.origin.z = -1000+Math.random()*2000;
 	// myBall.origin.y = 300+Math.random()*600;
@@ -671,7 +671,7 @@ var handler_fill_sky = function() {
 }
 var handler_add_y = function() {
 	loadMessage("Go big or go home!",true)
-	addBalls(25);
+	addBalls(15);
 	setTimeout(function() {
 		handler_finish();
 	},TIMEOUT_TIME);
