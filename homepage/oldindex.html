@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Countable Homepage</title>
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+	<div id="interface">
+		<button onclick="changeCamera('first');">Switch to First-Person</button>
+		<button onclick="changeCamera('third');">Switch to Third-Person</button>
+		<button onclick="toggleVisible('lines');">Toggle Lines</button>
+	</div>
+	<div id="Stats-output"></div>
+	<div id="WebGL-output"></div>
+
+	<!-- three stuff -->
+	<script src = "./js/lib/three.js"></script>
+	<script src = "./js/lib/stats.js"></script>
+	<script src = "./js/lib/perlin.js"></script>
+	<script src = "./js/lib/OrbitControls.js"></script>
+	<!-- entity stuff -->
+	<script src = "./js/entity/Fabric.js"></script>
+	<script src = "./js/entity/Curtain.js"></script>
+	<script src = "./js/entity/PolyCurtain.js"></script>
+	<!-- helper functions -->
+	<script src = "./js/script/helper.js"></script>
+	<!-- actual script -->
+	<script src = "./js/script/index.js"></script>
+</body>
+</html>

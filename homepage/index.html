@@ -6,10 +6,12 @@
 </head>
 <body>
 	<div id="interface">
-		<button onclick="changeCamera('first');">Switch to First-Person</button>
-		<button onclick="changeCamera('third');">Switch to Third-Person</button>
-		<button onclick="toggleVisible('lines');">Toggle Lines</button>
+		<button onclick="yes();">Yes</button>
+		<button onclick="no();">No</button>
+		<button onclick="TIMEOUT_TIME=500;">Debug Mode</button>
 	</div>
+	<div id="enterVr"><img src="./images/cardboard.svg"></div>
+
 	<div id="Stats-output"></div>
 	<div id="WebGL-output"></div>
 
@@ -17,14 +19,19 @@
 	<script src = "./js/lib/three.js"></script>
 	<script src = "./js/lib/stats.js"></script>
 	<script src = "./js/lib/perlin.js"></script>
-	<script src = "./js/lib/OrbitControls.js"></script>
+
+	<!-- VR stuff -->
+	<script src="./js/vr/DeviceOrientationControls.js"></script>
+    <script src="./js/vr/webvr-polyfill.js"></script>
+    <script src="./js/vr/VREffect.js"></script>
+    <script src="./js/vr/DragMouseControls.js"></script>
+
 	<!-- entity stuff -->
-	<script src = "./js/entity/Fabric.js"></script>
-	<script src = "./js/entity/Curtain.js"></script>
-	<script src = "./js/entity/PolyCurtain.js"></script>
+	<script src = "./js/entity/Ball.js"></script>
 	<!-- helper functions -->
 	<script src = "./js/script/helper.js"></script>
+	<script src = "./js/script/chatbot.js"></script>
 	<!-- actual script -->
-	<script src = "./js/script/index.js"></script>
+	<script src = "./js/script/index6.js"></script>
 </body>
 </html>
