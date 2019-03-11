@@ -21,12 +21,10 @@ var isMobile = function () {
 };
 
 var is_mobile = isMobile();
-// is_mobile = true;
 
 var entities = [];
 var frames = [];
 
-// declare a new sprite
 var terrain = {
 	terrainObj: {},
 	colorMap: new ColorMap(
@@ -57,7 +55,6 @@ function init() {
 	//create box
 	var planeGeometry = new THREE.PlaneGeometry(2000, 2000, 10, 10);
 	var planeMaterial = new THREE.MeshPhongMaterial({vertexColors:THREE.FaceColors});
-	// cubeMaterial.side = THREE.BackSide;
 	var backPlane = new THREE.Mesh(planeGeometry, planeMaterial);
 	scene.add(backPlane);
 	planes.push(backPlane);
@@ -96,13 +93,6 @@ function init() {
 		}
 	}
 
-
-	// for(var i=0; i<cubeGeometry.faces.length; i++) {
-	// 	var myColor = new THREE.Color();
-	// 	myColor.setHSL(.58, 0.7+Math.random()*0.3, 0.3+Math.random()*0.7);
-	// 	cubeGeometry.faces[i].color = myColor;
-	// }
-
 	var frontGeometry = new THREE.PlaneGeometry(2000, 2000);
 	var frontMaterial = new THREE.MeshPhongMaterial({color:0xe3e3e3});
 	var frontPlane = new THREE.Mesh(frontGeometry,frontMaterial);
@@ -122,12 +112,6 @@ function init() {
 	var pointLight = new THREE.PointLight( 0xeff1e6, 0.4, 0, 3.0 );
 	pointLight.position.set( 0, 0, 0 );
 	scene.add( pointLight );
-	// var pointLight = new THREE.PointLight( 0xe3e3e3, 0.5, 0, 3.0 );
-	// pointLight.position.set( 500, 500, 500 );
-	// scene.add( pointLight );
-	// var pointLight = new THREE.PointLight( 0xe3e3e3, 0.5, 0, 3.0 );
-	// pointLight.position.set( 500, 500, 500 );
-	// scene.add( pointLight );
 
 	// set up instruction text
 	loader.load( './js/fonts/questrialfont.json', function ( font ) {
@@ -194,9 +178,8 @@ function init() {
   	if (is_mobile) {
 		orientationcontrols = new THREE.DeviceOrientationControls(camera);
 	} else {
-	//
+
 	}
-	// renderer.setClearColor (0x888888, 1);
 
 	dragcontrols = new THREE.MouseControls(camera);
   	dragcontrols.orientation.y = 5.3; //+ Math.PI;
@@ -299,15 +282,6 @@ function updateTerrain() {
 				jiggling = false;
 			}
 		}
-		// way too slow - borderline impossible to run.
-		// should be possible with a custom shader
-
-		// if(terrainType == "lines") {
-		// 	for(var i=0; i<terrainFaces.length; i++) {
-		// 		terrainFaces[i].color.offsetHSL(0.001, 0, 0);
-		// 	}
-		// 	terrain.terrainObj.geometry.elementsNeedUpdate=true;
-		// }
 		terrain.terrainObj.geometry.verticesNeedUpdate=true;
 		
 	}
@@ -317,6 +291,9 @@ let yesCount = 0;
 let sinceLastAction = 0;
 let camera_hlimit = 0.8;
 let camera_vlimit = 0.6;
+let camera_hthreshold = 0.025;
+let camera_vthreshold = 0.02;
+let count_limit = 3;
 function cameraControls() {
 	if(sinceLastAction < 120) return;
 	var camera_oldv = {
@@ -346,24 +323,23 @@ function cameraControls() {
 		noCount = 0;
 		return;
 	}
-	if(Math.abs(camera_v.y)>0.04) {
+	if(Math.abs(camera_v.y)>camera_hthreshold) {
 		noCount++;
 	} else {
 		if(noCount > 0) noCount--;
 	}
-	if(noCount>6) {
+	if(noCount>count_limit) {
 		no();
 		noCount = 0;
 		sinceLastAction = 0;
 	}
 
-	if(Math.abs(camera_v.x)>0.04) {
+	if(Math.abs(camera_v.x)>camera_vthreshold) {
 		yesCount++;
 	} else {
 		if(yesCount > 0) yesCount--;
 	}
-	// console.log(yesCount, noCount);
-	if(yesCount>6) {
+	if(yesCount>count_limit) {
 		yes();
 		yesCount = 0;
 		sinceLastAction = 0;
@@ -397,19 +373,6 @@ function animate() {
 	}
 }
 function renderOpacity() {
-	// for(var i=0; i<animators.length; i++) {
-	// 	animators[i].obj.children.map(
-	// 		(child) => {child.material.opacity+=animators[i].del});
-	// 	if(animators[i].obj.children[0].material.opacity>1) {
-	// 		animators.splice(i, 1);
-	// 	} else if(animators[i].obj.children[0].material.opacity<0) {
-	// 		scene.remove(animators[i].obj);
-	// 		for(j=0; j<animators[i].obj.children.length; j++) {
-	// 			animators[i].obj.children[j].geometry.dispose();
-	// 			animators[i].obj.children[j].material.dispose();
-	// 		}
-	// 	}
-	// }
 	for(var i=0; i<animators.length; i++) {
 		animators[i].execute();
 		if(animators[i].isComplete()) {
@@ -420,11 +383,8 @@ function renderOpacity() {
 }
 function renderScene() {
 	requestAnimationFrame(renderScene);
-
 	cameraControls();
-
 	animate();
-
 	renderOpacity();
 
 	// update entities
@@ -436,7 +396,6 @@ function renderScene() {
 	updateTerrain()
 	updateEllipsis()
 
-	// lastJiggle++;
 	sinceLastAction++;
 
 	if (vrMode) {
@@ -459,4 +418,3 @@ function onResize() {
 window.addEventListener('resize', onResize, false);
 
 init();
-console.log("pushed final?");
