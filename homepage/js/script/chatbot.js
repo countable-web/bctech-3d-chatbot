@@ -1,4 +1,4 @@
-let TIMEOUT_TIME = 5000;
+let TIMEOUT_TIME = 4000;
 
 
 var dialogEngine = (function() {
@@ -233,12 +233,9 @@ var handler_glad = function() {
 	scene.add(mesh);
 	giftObj = mesh;
 
-	setTimeout(function() {
-		loadMessage("In fact, we designed this\nsmiley just for you.", true);
-		setTimeout(function() {
-		    handler_countable();
-		}, TIMEOUT_TIME);
-	}, TIMEOUT_TIME);
+    setTimeout(function() {
+        handler_countable();
+    }, TIMEOUT_TIME);
 }
 var animate_giftobj = function(myobj) {
 	animators.push({
@@ -701,15 +698,15 @@ var handler_empty = function() {
 	dialogEngine.setRespond(true);
 }
 var handler_nod = function() {
-	loadMessage("Cool!", true);
+	loadMessage("Well done!", true);
 	setTimeout(function() {
-		loadMessage("You can respond to\nquestions by nodding\nor shaking your head.", true);
-		setTimeout(function() {
-			loadMessage("But if you see '...' then\nit means I'm still talking.", true);
-			setTimeout(function() {
-				loadMessage(dialogEngine.sendMessage());
-			}, TIMEOUT_TIME);
-		},TIMEOUT_TIME)
+		/*loadMessage("You can respond to questions\nby nodding\nor shaking your head.", true);
+		setTimeout(function() {*/
+			loadMessage("If you see '...' then\nit means I'm still talking.", true);
+            setTimeout(function(){
+			    loadMessage(dialogEngine.sendMessage());
+            },TIMEOUT_TIME);
+		/*},TIMEOUT_TIME)*/
 	},TIMEOUT_TIME);
 }
 var handler_shake = function() {

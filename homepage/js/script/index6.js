@@ -188,13 +188,8 @@ function init() {
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
 	// onResize();
 	dialogEngine.addState({
-		message:"Hello!\nI'm a VR chatbot.\n\nNod your head if you\nunderstand me!",
+		message:"Hello!\nI'm a VR chatbot.\n\nNod your head if you\nunderstand me! (nod big!)",
 		handlers: [handler_nod, handler_empty],
-		children: [null, null]
-	});
-	dialogEngine.addState({
-		message:"Try shaking your head now!",
-		handlers: [handler_empty, handler_shake],
 		children: [null, null]
 	});
 	dialogEngine.addState({
@@ -291,8 +286,8 @@ let yesCount = 0;
 let sinceLastAction = 0;
 let camera_hlimit = 0.8;
 let camera_vlimit = 0.6;
-let camera_hthreshold = 0.025;
-let camera_vthreshold = 0.02;
+let camera_hthreshold = 0.020;
+let camera_vthreshold = 0.015;
 let count_limit = 3;
 function cameraControls() {
 	if(sinceLastAction < 120) return;
