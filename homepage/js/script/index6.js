@@ -188,7 +188,7 @@ function init() {
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
 	// onResize();
 	dialogEngine.addState({
-		message:"Hello!\nI'm a 3D chatbot.\n\nNod your head if you\nunderstand me!",
+		message:"Hello!\nI'm a VR chatbot.\n\nNod your head if you\nunderstand me!",
 		handlers: [handler_nod, handler_empty],
 		children: [null, null]
 	});
