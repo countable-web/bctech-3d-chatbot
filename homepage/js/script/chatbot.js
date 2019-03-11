@@ -187,18 +187,17 @@ function no() {
 var delGiftObj = 0;
 var delGiftObjV = 0;
 var handler_countable = function() {
-	loadMessage("Enjoy it for a bit longer...", true)
+	setTimeout(function() {
+		loadMessage("Time to put this away.", true)
+		delGiftObj = -1;
+		delGiftObjV = -2;
 		setTimeout(function() {
-			loadMessage("Time to put this away.", true)
-			delGiftObj = -1;
-			delGiftObjV = -2;
+			loadMessage("We're Countable.\nWe build tomorrow's\ninternet, today.", true);
 			setTimeout(function() {
-				loadMessage("We're Countable.\nWe build tomorrow's\ninternet, today.", true);
-				setTimeout(function() {
-					loadMessage(dialogEngine.sendMessage());
-				}, TIMEOUT_TIME);
+				loadMessage(dialogEngine.sendMessage());
 			}, TIMEOUT_TIME);
-		},TIMEOUT_TIME);
+		}, TIMEOUT_TIME);
+	},TIMEOUT_TIME);
 }
 var giftObj;
 var handler_glad = function() {
@@ -549,20 +548,17 @@ var handler_ball_y = function() {
 	setTimeout(function() {
 		loadMessage("Well, that's it.", true);
 		setTimeout(function() {
-			loadMessage("Pack your bags, this is it.", true);
+			loadMessage("This is the future.", true);
 			setTimeout(function() {
-				loadMessage("This is the future.", true);
+				loadMessage("Just kidding...", true);
 				setTimeout(function() {
-					loadMessage("Just kidding...", true);
+					loadMessage("Let's give it some life.",true);
 					setTimeout(function() {
-						loadMessage("Let's give it some life.",true);
-						setTimeout(function() {
-							handler_life();
-						}, TIMEOUT_TIME);
-					},TIMEOUT_TIME);
+						handler_life();
+					}, TIMEOUT_TIME);
 				},TIMEOUT_TIME);
 			},TIMEOUT_TIME);
-		}, TIMEOUT_TIME);
+		},TIMEOUT_TIME);
 		
 	},TIMEOUT_TIME);
 }
@@ -724,13 +720,13 @@ var handler_nod = function() {
 }
 var handler_shake = function() {
 	loadMessage("Great job!", true);
-	setTimeout(function() {
-		loadMessage("Before we get started...", true);
+	// setTimeout(function() {
+		// loadMessage("Before we get started...", true);
 		setTimeout(function() {
 			loadMessage("Let's practice that with\nanother question.", true);
 			setTimeout(function() {
 				loadMessage(dialogEngine.sendMessage());
 			},TIMEOUT_TIME);
 		},TIMEOUT_TIME);	
-	},TIMEOUT_TIME);
+	// },TIMEOUT_TIME);
 }

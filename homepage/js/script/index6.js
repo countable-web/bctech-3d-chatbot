@@ -317,6 +317,9 @@ let yesCount = 0;
 let sinceLastAction = 0;
 let camera_hlimit = 0.8;
 let camera_vlimit = 0.6;
+let camera_hthreshold = 0.03;
+let camera_vthreshold = 0.03;
+let count_limit = 4;
 function cameraControls() {
 	if(sinceLastAction < 120) return;
 	var camera_oldv = {
@@ -351,7 +354,7 @@ function cameraControls() {
 	} else {
 		if(noCount > 0) noCount--;
 	}
-	if(noCount>6) {
+	if(noCount>count_limit) {
 		no();
 		noCount = 0;
 		sinceLastAction = 0;
@@ -363,7 +366,7 @@ function cameraControls() {
 		if(yesCount > 0) yesCount--;
 	}
 	// console.log(yesCount, noCount);
-	if(yesCount>6) {
+	if(yesCount>count_limit) {
 		yes();
 		yesCount = 0;
 		sinceLastAction = 0;
