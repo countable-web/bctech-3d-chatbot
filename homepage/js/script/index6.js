@@ -317,9 +317,9 @@ let yesCount = 0;
 let sinceLastAction = 0;
 let camera_hlimit = 0.8;
 let camera_vlimit = 0.6;
-let camera_hthreshold = 0.03;
-let camera_vthreshold = 0.03;
-let count_limit = 4;
+let camera_hthreshold = 0.025;
+let camera_vthreshold = 0.02;
+let count_limit = 3;
 function cameraControls() {
 	if(sinceLastAction < 120) return;
 	var camera_oldv = {
