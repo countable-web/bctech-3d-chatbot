@@ -349,7 +349,7 @@ function cameraControls() {
 		noCount = 0;
 		return;
 	}
-	if(Math.abs(camera_v.y)>0.04) {
+	if(Math.abs(camera_v.y)>camera_hthreshold) {
 		noCount++;
 	} else {
 		if(noCount > 0) noCount--;
@@ -360,7 +360,7 @@ function cameraControls() {
 		sinceLastAction = 0;
 	}
 
-	if(Math.abs(camera_v.x)>0.04) {
+	if(Math.abs(camera_v.x)>camera_vthreshold) {
 		yesCount++;
 	} else {
 		if(yesCount > 0) yesCount--;
