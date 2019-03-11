@@ -192,7 +192,7 @@ var handler_countable = function() {
 		delGiftObj = -1;
 		delGiftObjV = -2;
 		setTimeout(function() {
-			loadMessage("We're Countable.\nWe build tomorrow's\ninternet, today.", true);
+			loadMessage("At Countable,\nwe build tomorrow's\ninternet, today.", true);
 			setTimeout(function() {
 				loadMessage(dialogEngine.sendMessage());
 			}, TIMEOUT_TIME);
@@ -236,10 +236,7 @@ var handler_glad = function() {
 	setTimeout(function() {
 		loadMessage("In fact, we designed this\nsmiley just for you.", true);
 		setTimeout(function() {
-			loadMessage("It's Countable-colored!", true);
-			setTimeout(function() {
-				handler_countable();
-			}, TIMEOUT_TIME);
+		    handler_countable();
 		}, TIMEOUT_TIME);
 	}, TIMEOUT_TIME);
 }
@@ -283,12 +280,9 @@ var handler_heart = function() {
 	giftObj = mesh;
 
 	setTimeout(function() {
-		loadMessage("It's not red, because we\nmade it just for you.", true);
+		loadMessage("We\nmade it just for you.", true);
 		setTimeout(function() {
-			loadMessage("It's Countable-colored!", true);
-			setTimeout(function() {
-				handler_countable();
-			}, TIMEOUT_TIME);
+			handler_countable();
 		}, TIMEOUT_TIME);
 	}, TIMEOUT_TIME);
 }
@@ -320,7 +314,7 @@ var showTerrain = function() {
 }
 var handler_terrain = function() {
 	setTimeout(function() {
-		loadMessage("Here at Countable,\nwe break boundaries.", true);
+		loadMessage("Let's break some barriers.", true);
 		setTimeout(function() {
 			makeTerrain();
 			destroyBox();
@@ -407,7 +401,7 @@ var makeTerrain = function() {
 
 	if(terrainType == "lines") {
 		let terrainWireframeMaterial = new THREE.MeshBasicMaterial();
-		terrainWireframeMaterial.wireframe = true;
+		//terrainWireframeMaterial.wireframe = true;
 		terrainWireframeMaterial.color = new THREE.Color(0x061e29)
 
 		let terrainMaterial = new THREE.MeshPhongMaterial({vertexColors:THREE.VertexColors});
