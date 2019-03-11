@@ -565,9 +565,9 @@ var handler_ball_y = function() {
 var handler_ball_n = function() {
 	loadMessage("Alright, here's a new one.", true);
 	setTimeout(function() {
-		loadMessage("What do you mean, it's the same one?", true);
+		loadMessage("What do you mean,\nit's the same one?", true);
 			setTimeout(function() {
-				loadMessage("It's at least half a micrometer bigger.", true);
+				loadMessage("It's at least half\na micrometer bigger.", true);
 				setTimeout(function() {
 					loadMessage("Let's give it some life.", true);
 					setTimeout(function() {
