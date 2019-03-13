@@ -187,17 +187,17 @@ function no() {
 var delGiftObj = 0;
 var delGiftObjV = 0;
 var handler_countable = function() {
-	setTimeout(function() {
-		loadMessage("Time to put this away.", true)
-		delGiftObj = -1;
-		delGiftObjV = -2;
-		setTimeout(function() {
+	// setTimeout(function() {
+		// loadMessage("Time to put this away.", true)
+		// delGiftObj = -1;
+		// delGiftObjV = -2;
+		// setTimeout(function() {
 			loadMessage("At Countable,\nwe build tomorrow's\ninternet, today.", true);
 			setTimeout(function() {
 				loadMessage(dialogEngine.sendMessage());
 			}, TIMEOUT_TIME);
-		}, TIMEOUT_TIME);
-	},TIMEOUT_TIME);
+		// }, TIMEOUT_TIME);
+	// },TIMEOUT_TIME);
 }
 var giftObj;
 var handler_glad = function() {
@@ -704,7 +704,8 @@ var handler_nod = function() {
 		setTimeout(function() {*/
 			loadMessage("If you see '...' then\nit means I'm still talking.", true);
             setTimeout(function(){
-			    loadMessage(dialogEngine.sendMessage());
+			    // loadMessage(dialogEngine.sendMessage());
+			    handler_countable();
             },TIMEOUT_TIME);
 		/*},TIMEOUT_TIME)*/
 	},TIMEOUT_TIME);

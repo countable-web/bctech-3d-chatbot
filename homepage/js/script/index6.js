@@ -192,16 +192,16 @@ function init() {
 		handlers: [handler_nod, handler_empty],
 		children: [null, null]
 	});
-	dialogEngine.addState({
-		message:"Are you enjoying\nBC Tech?",
-		handlers: [handler_glad, handler_heart],
-		children: [null, null]
-	});
-	dialogEngine.addState({
-		message: "Would you like to explore\nthe future with us?",
-		handlers: [handler_explore, handler_toobad],
-		children: [null, null]
-	});
+	// dialogEngine.addState({
+	// 	message:"Are you enjoying\nBC Tech?",
+	// 	handlers: [handler_glad, handler_heart],
+	// 	children: [null, null]
+	// });
+	// dialogEngine.addState({
+	// 	message: "Would you like to explore\nthe future with us?",
+	// 	handlers: [handler_explore, handler_toobad],
+	// 	children: [null, null]
+	// });
 	dialogEngine.addState({
 		message: "Do you like lines?",
 		handlers: [handler_lines, handler_dots],
