@@ -518,9 +518,10 @@ var handler_spicy_1n  = function(){
 };
 var myBall;
 var handler_future = function() {
-	loadMessage("It's finally time to\nexplore the future...", true);
-	setTimeout(function() {
-		loadMessage("But we're going to\nneed your help.", true);
+	// loadMessage("It's finally time to\nexplore the future...", true);
+	// setTimeout(function() {
+		// loadMessage("But we're going to\nneed your help.", true);
+		loadMessage("Let's build something\ncool together.", true);
 		setTimeout(function() {
 			loadMessage("We're going to start\nwith this ball.", true);
 			setTimeout(function() {
@@ -532,7 +533,7 @@ var handler_future = function() {
 				loadMessage(dialogEngine.sendMessage());
 			}, TIMEOUT_TIME);
 		}, TIMEOUT_TIME);
-	}, TIMEOUT_TIME);
+	// }, TIMEOUT_TIME);
 }
 var handler_ball_y = function() {
 	loadMessage("You have excellent taste.", true);
