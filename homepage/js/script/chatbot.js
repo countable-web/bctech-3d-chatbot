@@ -1,4 +1,4 @@
-let TIMEOUT_TIME = 3000;
+var TIMEOUT_TIME = 3000;
 
 
 var dialogEngine = (function() {
@@ -37,7 +37,7 @@ var dialogEngine = (function() {
 		},
 		receiveMessage: function(choice) {
 			//start by saving handlers
-			let myHandler;
+			var myHandler;
 			if(childState != null) {
 				myHandler = childState.handlers[choice];
 			} else {
@@ -119,7 +119,7 @@ function loadMessage(newMessage, talking) {
 			messageDotObj1.position.z = -900;
 			messageDotObj2.position.z = -900;
 			messageDotObj3.position.z = -900;
-			let lineCount = newMessage.split("\n").length;
+			var lineCount = newMessage.split("\n").length;
 
 			messageDotObj1.translateY(-lineCount*60-30);
 			messageDotObj2.translateY(-lineCount*60-30);
@@ -344,7 +344,7 @@ var destroyBox = function() {
 var terrainEnabled = false;
 terrainType = "";
 var makeTerrain = function() {
-	let terrainGeometry = new THREE.Geometry();
+	var terrainGeometry = new THREE.Geometry();
 
 	var tx, tz, tspace;
 	if(terrainType=="lines") {
@@ -354,11 +354,11 @@ var makeTerrain = function() {
 	}
 	const twidth = tx * tspace; const tdepth = tz * tspace;
 	const tleft = -twidth/2; const ttop = -tdepth/2;
-	let t_indices = [];
-	let t_index = 0;
-	for(let i=0; i<tx; i++) {
-		let index_row = [];
-		for(let j=0; j<tz; j++) {
+	var t_indices = [];
+	var t_index = 0;
+	for(var i=0; i<tx; i++) {
+		var index_row = [];
+		for(var j=0; j<tz; j++) {
 			var vertex = new THREE.Vector3();
 			vertex.x = tleft + tspace * i;
 			vertex.z = ttop + tspace * j;
@@ -366,7 +366,7 @@ var makeTerrain = function() {
 			terrainGeometry.vertices.push(vertex);
 
 			if(terrainType=="dots") {
-				let mycolor = new THREE.Color();
+				var mycolor = new THREE.Color();
 				terrainGeometry.colors.push(mycolor);
 			}
 
@@ -377,8 +377,8 @@ var makeTerrain = function() {
 	}
 	//create faces
 	if(terrainType == "lines") {
-		for(let i=0; i<tx-1; i++) {
-			for(let j=0; j<tz-1; j++) {
+		for(var i=0; i<tx-1; i++) {
+			for(var j=0; j<tz-1; j++) {
 				var face_indices = [t_indices[i][j],t_indices[i+1][j],t_indices[i][j+1],t_indices[i+1][j+1]];
 				var myColor1 = new THREE.Color(0xb7dee2);
 				var myColor2 = new THREE.Color(0xb7dee2);
@@ -397,14 +397,14 @@ var makeTerrain = function() {
 	}
 
 	if(terrainType == "lines") {
-		let terrainWireframeMaterial = new THREE.MeshBasicMaterial();
+		var terrainWireframeMaterial = new THREE.MeshBasicMaterial();
 		//terrainWireframeMaterial.wireframe = true;
 		terrainWireframeMaterial.color = new THREE.Color(0x061e29)
 
-		let terrainMaterial = new THREE.MeshPhongMaterial({vertexColors:THREE.VertexColors});
+		var terrainMaterial = new THREE.MeshPhongMaterial({vertexColors:THREE.VertexColors});
 		terrainMaterial.flatShading = true;
 		terrainMaterials = [terrainMaterial, terrainWireframeMaterial];
-		let terrainObj = createMultiMaterialObject(terrainGeometry, terrainMaterials);
+		var terrainObj = createMultiMaterialObject(terrainGeometry, terrainMaterials);
 		terrain.terrainObj = terrainObj.children[0];
 		terrainGeometry.computeVertexNormals();
 		terrainGeometry.normalsNeedUpdate = true;
@@ -418,7 +418,7 @@ var makeTerrain = function() {
 			transparent: true,
 			vertexColors: THREE.VertexColors
 		});
-		let terrainObj = new THREE.Points(terrainGeometry, terrainDotsMaterial);
+		var terrainObj = new THREE.Points(terrainGeometry, terrainDotsMaterial);
 		terrain.terrainObj = terrainObj;
 		scene.add(terrainObj);
 	}
@@ -626,7 +626,7 @@ var handler_color_n = function() {
 	},TIMEOUT_TIME);
 }
 var addBalls = function(number) {
-	for(let i=0; i<number; i++) {
+	for(var i=0; i<number; i++) {
 		// oy = 700+Math.random()*1000;
 		oy = Math.random()*600;
 		ox = -1500+Math.random()*3000;
@@ -689,7 +689,7 @@ var handler_finish = function() {
 	loadMessage(dialogEngine.sendMessage());
 }
 var jiggle_all = function() {
-	for(let i=0; i<entities.length; i++) {
+	for(var i=0; i<entities.length; i++) {
 		entities[i].jiggle();
 	}
 	jiggle_terrain();
